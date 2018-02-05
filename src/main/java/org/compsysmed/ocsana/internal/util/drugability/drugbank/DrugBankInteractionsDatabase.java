@@ -27,7 +27,7 @@ import org.compsysmed.ocsana.internal.util.science.uniprot.ProteinDatabase;
  * Singleton class representing the DrugBank database
  **/
 public class DrugBankInteractionsDatabase {
-    private static final String DRUGBANK_PATH = "/drugbank/drugs.json";
+    private static final String DRUGBANK_PATH = "/drugbank/drugs_NEW.json";
     private static final DrugBankInteractionsDatabase internalDB = new DrugBankInteractionsDatabase();
 
     private final ProteinDatabase proteinDB = ProteinDatabase.getDB();

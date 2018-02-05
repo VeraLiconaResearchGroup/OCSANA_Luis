@@ -24,7 +24,7 @@ public class DrugBankInteractionsDatabaseTest {
     @Test
     public void buildDatabaseShouldWork () {
         DrugBankInteractionsDatabase db = DrugBankInteractionsDatabase.getDB();
-        assertEquals("Number of drugs in database", 8203, db.getAllDrugs().size());
+        assertEquals("Number of drugs in database", 10562, db.getAllDrugs().size());
     }
 
     @Test

@@ -24,7 +24,11 @@ public enum DrugActionType {
     ACETYLATION ("acetylation", InteractionSign.UNSIGNED),
     ACTIVATOR ("activator", InteractionSign.POSITIVE),
     ADDUCT ("adduct", InteractionSign.NEGATIVE),
+    ///added 2.6.18
+    AGGREGATION_INHIBITOR ("aggregation inhibitor",InteractionSign.NEGATIVE),
     AGONIST ("agonist", InteractionSign.POSITIVE),
+    ///added 2.6.18
+    ANTISENSE_OLIGONUCLEOTIDE("antisense oligonucleotide", InteractionSign.NEGATIVE),
     ALLOSTERIC_MODULATOR ("allosteric modulator", InteractionSign.UNSIGNED),
     ANTAGONIST ("antagonist", InteractionSign.NEGATIVE),
     ANTIBODY ("antibody", InteractionSign.NEGATIVE),
@@ -37,9 +41,14 @@ public enum DrugActionType {
     COFACTOR ("cofactor", InteractionSign.UNSIGNED),
     CROSS_LINKING ("cross-linking/alkylation", InteractionSign.NEGATIVE),
     DESENSITIZE_THE_TARGET ("desensitize the target", InteractionSign.NEGATIVE),
+    ///added 2.6.18
+    INACTIVATOR ("inactivator",InteractionSign.NEGATIVE),
     INCORPORATION_INTO_AND_DESTABILIZATION ("incorporation into and destabilization", InteractionSign.NEGATIVE),
     INDUCER ("inducer", InteractionSign.POSITIVE),
+
     INHIBITOR ("inhibitor", InteractionSign.NEGATIVE),
+    ///added 2.6.18
+    INHIBITORY_IMMUNE_RESPONSE ("inhibitory immune response", InteractionSign.NEGATIVE),
     COMPETITIVE_INHIBITOR ("inhibitor, competitive", InteractionSign.NEGATIVE),
     INHIBITORY_ALLOSTERIC_MODULATOR ("inhibitory allosteric modulator", InteractionSign.NEGATIVE),
     INTERCALATION ("intercalation", InteractionSign.NEGATIVE),
@@ -51,6 +60,9 @@ public enum DrugActionType {
     NEUTRALIZER ("neutralizer", InteractionSign.NEGATIVE),
     OTHER ("other", InteractionSign.UNSIGNED),
     OTHER_UNKNOWN ("other/unknown", InteractionSign.UNSIGNED),
+    ///added 2.6.18
+    OXIDIZER ("oxidizer",InteractionSign.UNSIGNED),
+    
     PARTIAL_AGONIST ("partial agonist", InteractionSign.POSITIVE),
     PARTIAL_ANTAGONIST ("partial antagonist", InteractionSign.UNSIGNED),
     POSITIVE_ALLOSTERIC_MODULATOR ("positive allosteric modulator", InteractionSign.POSITIVE),
@@ -59,8 +71,14 @@ public enum DrugActionType {
     PRODUCT_OF ("product of", InteractionSign.UNSIGNED),
     REDUCER ("reducer", InteractionSign.NEGATIVE),
     STIMULATOR ("stimulator", InteractionSign.POSITIVE),
+    SUBSTRATE ("substrate", InteractionSign.UNSIGNED),
     SUPPRESSOR ("suppressor", InteractionSign.NEGATIVE),
-    UNKNOWN ("unknown", InteractionSign.UNSIGNED);
+    UNKNOWN ("unknown", InteractionSign.UNSIGNED),
+    ///added 2.6.18
+    COMPONENT_OF ("component of", InteractionSign.UNSIGNED),
+    NUCLEOTIDE_EXCHANGE_BLOCKER ("nucleotide exchange blocker",InteractionSign.UNSIGNED),
+    ///added 2.6.18
+    WEAK_INHIBITOR ("weak inhibitor",InteractionSign.NEGATIVE);
 
     private static final Map<String, DrugActionType> lookupByDescription = new HashMap<>();
 
