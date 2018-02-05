@@ -1,0 +1,92 @@
+{# INPUTS: "node" is a SignedInterventionNode, "bundle" is a DrugabilityDataBundle #}
+<html>
+    <h3>Drugability report (Node {{node.getName()}}: {{node.getBiomoleculeID}})</h3>
+    <h4>Desired effect: {{node.getSign()}}</h4>
+    {%if bundle is null %}
+    <p>
+        Protein name could not be found.
+    </p>
+    {% else %}
+    <p>
+        Protein: <a href="{{bundle.getProtein().getUniProtURL()}}">{{bundle.getProtein().getName()}}</a>
+        <br />
+        <!--{% if bundle.getProtein().getFunctionDescription() is not null %}
+        Function: {{bundle.getProtein().getFunctionDescription()}}
+        {% else %}
+        No function specified in UniProt.
+        {% endif %}-->
+    </p>
+    <h4>Known drug interactions</h4>
+    {% if bundle.getAllInteractions() is empty %}
+    <p>
+        No known drug interactions.
+    </p>
+    {% else %}
+    <p>
+        {% if bundle.getAllInteractionsOfSign(node.getSign()) is empty %}
+        No known drug interactions of sign {{node.getSign()}}.
+        {% else %}
+        Known drug interactions (effect: {{node.getSign()}})
+        <ul>
+            {% for interaction in bundle.getAllInteractionsOfSign(node.getSign()) %}
+            <li><a href="{{interaction.getDrug().getDrugBankURL()}}">{{interaction.getDrug().getName()}}</a> ({{interaction.getDrugActionType().getDescription()}})</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </p>
+    <p>
+        ({{bundle.getAllInteractionsNotOfSign(node.getSign()).size()}} other interaction(s) are known. See <a href="{{bundle.getProtein().getDrugBankBioDBURL()}}">DrugBank BioDB page</a> for details.)
+    </p>
+    {% endif %}
+    <h4>Drugability predictions</h4>
+    <p>
+        {% if bundle.hasDrugableLigand() %}
+        DrugFEATURE predicted drugable ligands:
+        <table>
+            <tr>
+                <th>PDB ID</th>
+                <th>Chain</th>
+                <th>Index</th>
+                <th>Ligand</th>
+                <th>Score</th>
+            </tr>
+            {% for ligand in bundle.getDrugableLigands() %}
+            <tr>
+                <td><a href="{{ligand.getPDBURL()}}">{{ligand.getPDBID()}}</a></td>
+                <td>{{ligand.getChain()}}</td>
+                <td>{{ligand.getIndex()}}</td>
+                <td>{{ligand.getLigandName()}}</td>
+                <td>{{ligand.getScore()}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        No drugable ligands predicted by DrugFEATURE.
+        {% endif %}
+    </p>
+    <p>
+        {% if bundle.getDrProdisPredictions() is not null and bundle.getDrProdisPredictions() is not empty %}
+        DR.PRODIS binding predictions:
+        <table>
+            <tr>
+                <th>NCBI RefSeq</th>
+                <th>Novel bindings predicted</th>
+                <th>Known bindings predicted</th>
+                <th>DR.PRODIS details page</th>
+            </tr>
+            {% for prediction in bundle.getDrProdisPredictions() %}
+            <tr>
+                <td>{{prediction.getRefSeqID()}}</td>
+                <td>{{prediction.getCountOfNovelBindingDrugs()}}</td>
+                <td>{{prediction.getCountOfKnownBindingDrugs()}}</td>
+                <td><a href="{{prediction.getDrProdisURL()}}">{{prediction.getDrProdisURL()}}</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        (Note that all access to the DR.PRODIS web service is subject to restrictions on commercial use.
+        See the <a href="http://cssb.biology.gatech.edu/repurpose">home page</a> for details.)
+        {% else %}
+        No DR.PRODIS predictions were found.
+        {% endif %}
+    {% endif %}
+</html>

@@ -1,0 +1,9 @@
+target/
+.classpath
+.project
+.settings/
+/nbproject/private/
+.DS_Store
+/bin/
+./ekztazi
+.pydevproject
