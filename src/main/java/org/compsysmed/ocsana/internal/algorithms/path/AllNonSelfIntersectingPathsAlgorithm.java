@@ -87,6 +87,10 @@ public class AllNonSelfIntersectingPathsAlgorithm
                 if (isCanceled()) {
                     return null;
                 }
+                //Handle loop case.
+                if (outEdge.getSource().equals(outEdge.getTarget())) {
+                    break;
+                }
 
                 if (!outEdge.isDirected()) {
                     throw new IllegalArgumentException(UNDIRECTED_ERROR_MESSAGE);
