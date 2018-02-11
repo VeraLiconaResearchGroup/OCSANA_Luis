@@ -89,7 +89,7 @@ public enum DrugActionType {
     }
 
     public static DrugActionType getByDescription (String description) {
-        return lookupByDescription.getOrDefault(description.toLowerCase(), null);
+        return lookupByDescription.getOrDefault(description.toLowerCase(), DrugActionType.UNKNOWN);
     }
 
     private String description;
