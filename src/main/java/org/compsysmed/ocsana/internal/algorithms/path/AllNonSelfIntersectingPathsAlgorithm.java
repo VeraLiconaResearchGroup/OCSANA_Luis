@@ -89,7 +89,7 @@ public class AllNonSelfIntersectingPathsAlgorithm
                 }
                 //Handle loop case.
                 if (outEdge.getSource().equals(outEdge.getTarget())) {
-                    break;
+                    continue;
                 }
 
                 if (!outEdge.isDirected()) {
