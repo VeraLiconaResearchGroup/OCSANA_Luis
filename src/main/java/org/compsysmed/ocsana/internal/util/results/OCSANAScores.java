@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 // Cytoscape imports
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
+import org.cytoscape.work.TaskMonitor;
 
 // OCSANA imports
 
@@ -45,9 +46,9 @@ public class OCSANAScores {
                          Map<CyNode, Map<CyNode, Double>> effectsOnOffTargets,
                          Map<CyNode, Set<CyNode>> offTargetsHitMap,
                          Map<CyNode, Map<CyNode, Integer>> offTargetPathCountMap) {
-        Objects.requireNonNull(network, "Network cannot be null");
+    		Objects.requireNonNull(network, "Network cannot be null");
         this.network = network;
-
+        
         Objects.requireNonNull(effectsOnTargets, "EFFECTS_ON_TARGETS map cannot be null");
         this.effectsOnTargets = effectsOnTargets;
 
@@ -192,8 +193,8 @@ public class OCSANAScores {
         Objects.requireNonNull(elementaryNode, "Elementary node cannot be null");
         Objects.requireNonNull(targets, "Set of target nodes cannot be null");
         Objects.requireNonNull(offTargets, "Set of off-target nodes cannot be null");
-
         Integer setScore = targetPathCountMap.get(elementaryNode).entrySet().stream().filter(entry -> targets.contains(entry.getKey())).mapToInt(entry -> entry.getValue()).sum();
+        
         return OVERALL(elementaryNode, targets, offTargets) * setScore;
     }
 
@@ -206,7 +207,6 @@ public class OCSANAScores {
         Objects.requireNonNull(elementaryNodes, "Set of elementary nodes cannot be null");
         Objects.requireNonNull(targets, "Set of target nodes cannot be null");
         Objects.requireNonNull(offTargets, "Set of off-target nodes cannot be null");
-
         return elementaryNodes.stream().mapToDouble(node -> OCSANA(node, targets, offTargets)).sum();
     }
 

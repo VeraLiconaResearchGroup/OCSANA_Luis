@@ -88,7 +88,7 @@ public class MHSSubpanel
         algorithmSelecter.addActionListener(this);
 
         // CI configuration
-        includeEndpointsInCIs = new JCheckBox("Allow sources and targets in CIs", contextBundleBuilder.getIncludeEndpointsInCIs());
+        includeEndpointsInCIs = new JCheckBox("Allow sources in  CIs", contextBundleBuilder.getIncludeEndpointsInCIs());
         add(includeEndpointsInCIs);
 
         // Algorithm configuration panel

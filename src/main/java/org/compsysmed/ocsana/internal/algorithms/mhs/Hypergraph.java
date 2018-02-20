@@ -12,7 +12,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Impelementation of hypergraphs/set families
+ * Implementation of hypergraphs/set families
  **/
 
 public class Hypergraph

@@ -1,5 +1,5 @@
 /**
- * Task to run HMS algorithm in OCSANA
+ * Task to run MHS algorithm in OCSANA
  *
  * Copyright Vera-Licona Research Group (C) 2015
  *
@@ -75,7 +75,6 @@ public class MHSAlgorithmTask extends AbstractOCSANATask {
             // appropriate
             for (int i = 0; i <= path.size() - 1; i++) {
                 CyEdge edge = path.get(i);
-
                 // Since we're using a Set, we don't have to worry
                 // about multiple addition, so we'll just go ahead and
                 // add the source and target every time
@@ -84,7 +83,8 @@ public class MHSAlgorithmTask extends AbstractOCSANATask {
                     nodes.add(edge.getSource());
                 }
 
-                if (contextBundle.getIncludeEndpointsInCIs() ||
+              
+                if (
                     (!sourceNodes.contains(edge.getTarget()) && !targetNodes.contains(edge.getTarget()))) {
                     nodes.add(edge.getTarget());
                 }
@@ -100,16 +100,20 @@ public class MHSAlgorithmTask extends AbstractOCSANATask {
         taskMonitor.setStatusMessage(String.format("Converted paths in %f s.", conversionTime));
 
         taskMonitor.setStatusMessage(String.format("Finding minimal combinations of interventions (algorithm: %s).", contextBundle.getMHSAlgorithm().shortName()));
-
+        
         Long preMHSTime = System.nanoTime();
         Collection<Set<CyNode>> MHSes = contextBundle.getMHSAlgorithm().MHSes(nodeSets);
-
         if (MHSes != null) {
-            resultsBundle.setCIs(MHSes.stream().map(mhs -> new CombinationOfInterventions(mhs, targetNodes, contextBundle.getNodeHandler()::getNodeName, contextBundle.getNodeHandler()::getNodeID, resultsBundle.getOCSANAScores().OCSANA(mhs))).collect(Collectors.toList()));
+          
+        	
+          resultsBundle.setCIs(MHSes.stream().map(mhs -> new CombinationOfInterventions(mhs, targetNodes, contextBundle.getNodeHandler()::getNodeName, contextBundle.getNodeHandler()::getNodeID, resultsBundle.getOCSANAScores().OCSANA(mhs))).collect(Collectors.toList()));
+          //THE LINE ABOVE IS GIVING AN EXCEPTION. I have already checked that MHSes is not null.
         }
+        
         Long postMHSTime = System.nanoTime();
 
         Double mhsTime = (postMHSTime - preMHSTime) / 1E9;
+
         taskMonitor.showMessage(TaskMonitor.Level.INFO, String.format("Found %d minimal CIs in %f s.", resultsBundle.getCIs().size(), mhsTime));
 
         resultsBundle.setMHSExecutionSeconds(mhsTime);
