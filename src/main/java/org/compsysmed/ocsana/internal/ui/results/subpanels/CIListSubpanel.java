@@ -80,8 +80,10 @@ public class CIListSubpanel
 
             // Set up the sorter
             TableRowSorter<TableModel> mhsSorter = new TableRowSorter<>(mhsModel);
-            mhsSorter.setSortable(0, false); // Disable sorting by CI node string
-            mhsSorter.toggleSortOrder(1); // Sort by increasing CI size
+            mhsSorter.setSortable(0, false); 
+            mhsSorter.setSortable(1, false); // Disable sorting by CI size TEMPORARY
+            mhsSorter.setSortable(3, false); // Disable sorting by best SI priority score TEMPORARY
+            
             setRowSorter(mhsSorter);
 
             // Handle double click events per row
@@ -89,6 +91,7 @@ public class CIListSubpanel
                     public void mousePressed(MouseEvent me) {
                         Point p = me.getPoint();
                         int row = rowAtPoint(p);
+
                         if (me.getClickCount() == 2 && row != -1) {
                             handleUserDoubleClick(row);
                         }
@@ -100,11 +103,21 @@ public class CIListSubpanel
         }
 
         public void handleUserDoubleClick (Integer row) {
+        		Collections.sort(CIs, new SortbyOcsanaScore());
             CombinationOfInterventions ci = CIs.get(row);
             InterventionDetailsDialog detailsDialog = new InterventionDetailsDialog(cytoscapeFrame, contextBundle.getNetwork(), ci, resultsBundle.getOptimalInterventionSignings(ci));
         }
     }
 
+    class SortbyOcsanaScore implements Comparator<CombinationOfInterventions>
+    {
+
+		@Override
+		public int compare(CombinationOfInterventions o1, CombinationOfInterventions o2) {
+			return Double.compare(o1.getOCSANAScore(), o2.getOCSANAScore());
+
+		}
+    }
     private static class MHSTableModel extends AbstractTableModel {
         private final ContextBundle contextBundle;
         private final ResultsBundle resultsBundle;

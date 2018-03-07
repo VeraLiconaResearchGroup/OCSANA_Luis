@@ -17,7 +17,7 @@ import java.net.MalformedURLException;
 
 
 /**
- * Class representing the DR.PRODUS drugability prediction for a protein
+ * Class representing the DR.PRODIS drugability prediction for a protein
  **/
 public class DrProdisDrugabilityPrediction {
     private static final String DRPRODIS_URL_BASE = "http://cssb2.biology.gatech.edu/FINDTA/doc/";

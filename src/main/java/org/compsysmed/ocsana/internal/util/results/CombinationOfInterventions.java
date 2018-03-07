@@ -72,6 +72,7 @@ public class CombinationOfInterventions {
         Objects.requireNonNull(ocsanaScore, "OCSANA score cannot be null");
         this.ocsanaScore = ocsanaScore;
     }
+    
 
     /**
      * Copy constructor
