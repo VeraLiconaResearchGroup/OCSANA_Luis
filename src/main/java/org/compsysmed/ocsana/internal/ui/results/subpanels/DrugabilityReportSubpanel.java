@@ -23,6 +23,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.JScrollPane;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -46,6 +47,7 @@ import org.compsysmed.ocsana.internal.util.science.*;
 public class DrugabilityReportSubpanel
     extends JPanel {
     private JTextPane textPane;
+    private JScrollPane scrollPane;
     private PebbleTemplate compiledTemplate;
 
     /**
@@ -71,6 +73,8 @@ public class DrugabilityReportSubpanel
                                 // launching the browser. Oh well.
                                 String errorMessage = String.format("<html>This platform does not support launching a browser from Java.<br />The URL you clicked was <a href='%1$s'>%1$s</a></html>.", e.getURL().toString());
                                 JOptionPane.showMessageDialog(null, errorMessage, "Browser not supported", JOptionPane.ERROR_MESSAGE);
+                                
+                                
                             }
                         }
                     }
@@ -110,6 +114,7 @@ public class DrugabilityReportSubpanel
         }
 
         textPane.setText(writer.toString());
+
     }
 
 }
