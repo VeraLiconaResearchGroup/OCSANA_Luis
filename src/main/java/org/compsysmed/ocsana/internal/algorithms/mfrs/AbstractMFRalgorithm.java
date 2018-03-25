@@ -42,6 +42,6 @@ public abstract class AbstractMFRalgorithm
      * @param sets  the sets to hit
      * @return the collection of MHSes of the input sets
      **/
-    public abstract Collection<List<CyEdge>> MFRs (Set<CyNode> sources,
+    public abstract Collection<List<CyEdge>> MinimalFunctionalRoutes (Set<CyNode> sources,
             Set<CyNode> targets);
 }
