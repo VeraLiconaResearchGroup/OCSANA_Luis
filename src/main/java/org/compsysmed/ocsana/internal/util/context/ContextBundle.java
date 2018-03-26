@@ -51,7 +51,7 @@ public final class ContextBundle {
     private final NodeHandler nodeHandler;
     private final EdgeProcessor edgeProcessor;
     private final boolean includeEndpointsInCIs;
-
+    private final boolean computeMFRs;
     private final AbstractPathFindingAlgorithm pathFindingAlgorithm;
     private final AbstractMHSAlgorithm mhsAlgorithm;
     private final OCSANAScoringAlgorithm ocsanaAlgorithm;
@@ -71,6 +71,7 @@ public final class ContextBundle {
                           NodeHandler nodeHandler,
                           EdgeProcessor edgeProcessor,
                           boolean includeEndpointsInCIs,
+                          boolean computeMFRs,
                           AbstractPathFindingAlgorithm pathFindingAlgorithm,
                           AbstractMHSAlgorithm mhsAlgorithm,
                           OCSANAScoringAlgorithm ocsanaAlgorithm,
@@ -97,6 +98,8 @@ public final class ContextBundle {
         this.edgeProcessor = edgeProcessor;
 
         this.includeEndpointsInCIs = includeEndpointsInCIs;
+        
+        this.computeMFRs=computeMFRs;
 
         Objects.requireNonNull(pathFindingAlgorithm, "Path-finding algorithm cannot be null");
         this.pathFindingAlgorithm = pathFindingAlgorithm;

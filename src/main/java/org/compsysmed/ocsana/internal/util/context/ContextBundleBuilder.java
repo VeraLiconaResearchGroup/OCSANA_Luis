@@ -56,6 +56,7 @@ public class ContextBundleBuilder {
     private NodeHandler nodeHandler;
     private EdgeProcessor edgeProcessor;
     private boolean includeEndpointsInCIs;
+    private boolean computeMFRs;
 
     private AbstractPathFindingAlgorithm pathFindingAlgorithm;
     private AbstractMHSAlgorithm mhsAlgorithm;
@@ -72,6 +73,7 @@ public class ContextBundleBuilder {
         setNodeHandler(new NodeHandler(network));
         setEdgeProcessor(new EdgeProcessor(network));
         setIncludeEndpointsInCIs(false);
+        setcomputeMFRs(false);
 
         setPathFindingAlgorithm(new AllNonSelfIntersectingPathsAlgorithm(network));
         setMHSAlgorithm(new MMCSAlgorithm());
@@ -216,9 +218,30 @@ public class ContextBundleBuilder {
     /**
      * Return whether to include endpoints in CIs
      **/
+    public boolean getMFRs () {
+        return computeMFRs;
+    }
+    
+    /**
+     * Set whether to include endpoints in CIs
+     **/
+    public void setcomputeMFRs (boolean computeMFRs) {
+        this.computeMFRs = computeMFRs;
+    }
+
+    /**
+     * Return whether to include endpoints in CIs
+     **/
     public boolean getIncludeEndpointsInCIs () {
         return includeEndpointsInCIs;
     }
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * Set the path-finding algorithm

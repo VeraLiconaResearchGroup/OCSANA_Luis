@@ -17,6 +17,7 @@ import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,7 +44,7 @@ public class PathFindingSubpanel
     // UI elements
     private JPanel algSelectionPanel;
     private JComboBox<AbstractPathFindingAlgorithm> algorithmSelecter;
-
+    private JCheckBox computeMFRs;
     private JPanel tunablePanel;
 
     /**
@@ -84,6 +85,9 @@ public class PathFindingSubpanel
         tunablePanel = new JPanel();
         setStandardLayout(tunablePanel);
         add(tunablePanel);
+        // CI configuration
+        computeMFRs = new JCheckBox("Compute MFRs", contextBundleBuilder.getIncludeEndpointsInCIs());
+        add(computeMFRs);
 
         updateTunablePanel();
     }
