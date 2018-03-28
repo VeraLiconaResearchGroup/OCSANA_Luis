@@ -233,7 +233,19 @@ public class OCSANAResultsPanel
             PathsSubpanel targetPathsSubpanel = new PathsSubpanel(contextBundle, resultsBundle, PathsSubpanel.PathType.TO_OFF_TARGETS);
             resultsTabbedPane.addTab("Paths to Off-targets", targetPathsSubpanel);
         }
-
+        
+        if (resultsBundle.getMFRs() != null) {
+            MinimalFunctionalRouteSubpanel MFRSubpanel = new MinimalFunctionalRouteSubpanel(contextBundle, resultsBundle, PathsSubpanel.PathType.TO_OFF_TARGETS);
+            resultsTabbedPane.addTab("Minimal Functional Routes",MFRSubpanel);
+        }
+//        
+//        if (resultsBundle.getMFRs() != null) {
+//            MFRSubpane targetPathsSubpanel = new PathsSubpanel(contextBundle, resultsBundle, PathsSubpanel.PathType.TO_OFF_TARGETS);
+//            resultsTabbedPane.addTab("Paths to Off-targets", targetPathsSubpanel);
+//        }
+        
+        
+        
         return resultsPanel;
     }
 

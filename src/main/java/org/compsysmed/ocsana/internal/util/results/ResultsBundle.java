@@ -27,6 +27,12 @@ public class ResultsBundle {
     private Collection<List<CyEdge>> pathsToTargets;
     private Collection<List<CyEdge>> pathsToOffTargets;
 
+    //MFR data     
+    private Collection<List<CyEdge>> MFRs;
+    
+    
+    
+    
     private Double pathsToTargetsExecutionSeconds;
     private Double pathsToOffTargetsExecutionSeconds;
 
@@ -49,10 +55,19 @@ public class ResultsBundle {
     public Collection<List<CyEdge>> getPathsToTargets () {
         return pathsToTargets;
     }
+    
+    public Collection<List<CyEdge>> getMFRs () {
+        return MFRs;
+    }
 
     public void setPathsToTargets (Collection<List<CyEdge>> pathsToTargets) {
         Objects.requireNonNull(pathsToTargets, "Collection of paths to targets cannot be null");
         this.pathsToTargets = pathsToTargets;
+    }
+    
+    public void setMFRs (Collection<List<CyEdge>> MFRs) {
+        Objects.requireNonNull(pathsToTargets, "Collection of MFRs to targets cannot be null");
+        this.MFRs = MFRs;
     }
 
     public Collection<List<CyEdge>> getPathsToOffTargets () {

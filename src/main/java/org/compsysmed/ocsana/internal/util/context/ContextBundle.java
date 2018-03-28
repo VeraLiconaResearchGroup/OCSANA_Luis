@@ -24,6 +24,7 @@ import org.cytoscape.model.CyNode;
 import org.compsysmed.ocsana.internal.util.tunables.NodeHandler;
 import org.compsysmed.ocsana.internal.util.tunables.EdgeProcessor;
 
+import org.compsysmed.ocsana.internal.algorithms.MinimalFunctionalRoutes.AbstractMFRalgorithm;
 import org.compsysmed.ocsana.internal.algorithms.AbstractOCSANAAlgorithm;
 import org.compsysmed.ocsana.internal.algorithms.signassignment.AbstractCISignAssignmentAlgorithm;
 import org.compsysmed.ocsana.internal.algorithms.siscoring.AbstractSignedInterventionScoringAlgorithm;
@@ -55,6 +56,7 @@ public final class ContextBundle {
     private final AbstractPathFindingAlgorithm pathFindingAlgorithm;
     private final AbstractMHSAlgorithm mhsAlgorithm;
     private final OCSANAScoringAlgorithm ocsanaAlgorithm;
+    private final AbstractMFRalgorithm MFRalgorithm;
 
     private final Set<CyNode> targetsToActivate;
     private final Set<CyNode> targetsToDeactivate;
@@ -74,6 +76,7 @@ public final class ContextBundle {
                           boolean computeMFRs,
                           AbstractPathFindingAlgorithm pathFindingAlgorithm,
                           AbstractMHSAlgorithm mhsAlgorithm,
+                          AbstractMFRalgorithm MFRalgorithm,
                           OCSANAScoringAlgorithm ocsanaAlgorithm,
                           Set<CyNode> targetsToActivate,
                           AbstractCISignAssignmentAlgorithm ciSignAlgorithm,
@@ -109,7 +112,11 @@ public final class ContextBundle {
 
         Objects.requireNonNull(ocsanaAlgorithm, "OCSANA scoring algorithm cannot be null");
         this.ocsanaAlgorithm = ocsanaAlgorithm;
-
+        
+        Objects.requireNonNull(MFRalgorithm, "OCSANA scoring algorithm cannot be null");
+        this.MFRalgorithm = MFRalgorithm;
+        
+        
         Objects.requireNonNull(targetsToActivate, "Set of targets to activate cannot be empty");
         this.targetsToActivate = targetsToActivate;
         targetsToDeactivate = new HashSet<>(targetNodes);
@@ -242,6 +249,10 @@ public final class ContextBundle {
      **/
     public AbstractPathFindingAlgorithm getPathFindingAlgorithm () {
         return pathFindingAlgorithm;
+    }
+    
+    public AbstractMFRalgorithm getMFRAlgorithm () {
+        return MFRalgorithm;
     }
 
     /**

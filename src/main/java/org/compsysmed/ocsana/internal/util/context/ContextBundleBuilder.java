@@ -28,6 +28,8 @@ import org.compsysmed.ocsana.internal.algorithms.siscoring.SimpleDrugabilityScor
 import org.compsysmed.ocsana.internal.algorithms.mhs.AbstractMHSAlgorithm;
 import org.compsysmed.ocsana.internal.algorithms.mhs.MMCSAlgorithm;
 
+import org.compsysmed.ocsana.internal.algorithms.MinimalFunctionalRoutes.AbstractMFRalgorithm;
+import org.compsysmed.ocsana.internal.algorithms.MinimalFunctionalRoutes.MFR;
 import org.compsysmed.ocsana.internal.algorithms.path.AbstractPathFindingAlgorithm;
 import org.compsysmed.ocsana.internal.algorithms.path.AllNonSelfIntersectingPathsAlgorithm;
 
@@ -59,6 +61,7 @@ public class ContextBundleBuilder {
     private boolean computeMFRs;
 
     private AbstractPathFindingAlgorithm pathFindingAlgorithm;
+    private AbstractMFRalgorithm MFRalgorithm;
     private AbstractMHSAlgorithm mhsAlgorithm;
     private OCSANAScoringAlgorithm ocsanaAlgorithm;
     private AbstractCISignAssignmentAlgorithm ciSignAlgorithm;
@@ -319,6 +322,6 @@ public class ContextBundleBuilder {
      * Return the context as currently configured
      **/
     public ContextBundle getContextBundle () {
-        return new ContextBundle(network, sourceNodes, targetNodes, offTargetNodes, nodeHandler, edgeProcessor, includeEndpointsInCIs, computeMFRs, pathFindingAlgorithm, mhsAlgorithm, ocsanaAlgorithm, targetsToActivate, ciSignAlgorithm, siScoringAlgorithm);
+        return new ContextBundle(network, sourceNodes, targetNodes, offTargetNodes, nodeHandler, edgeProcessor, includeEndpointsInCIs, computeMFRs, pathFindingAlgorithm, mhsAlgorithm, MFRalgorithm, ocsanaAlgorithm, targetsToActivate, ciSignAlgorithm, siScoringAlgorithm);
     }
 }
