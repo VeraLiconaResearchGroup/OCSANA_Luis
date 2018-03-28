@@ -319,6 +319,6 @@ public class ContextBundleBuilder {
      * Return the context as currently configured
      **/
     public ContextBundle getContextBundle () {
-        return new ContextBundle(network, sourceNodes, targetNodes, offTargetNodes, nodeHandler, edgeProcessor, includeEndpointsInCIs, pathFindingAlgorithm, mhsAlgorithm, ocsanaAlgorithm, targetsToActivate, ciSignAlgorithm, siScoringAlgorithm);
+        return new ContextBundle(network, sourceNodes, targetNodes, offTargetNodes, nodeHandler, edgeProcessor, includeEndpointsInCIs, computeMFRs, pathFindingAlgorithm, mhsAlgorithm, ocsanaAlgorithm, targetsToActivate, ciSignAlgorithm, siScoringAlgorithm);
     }
 }

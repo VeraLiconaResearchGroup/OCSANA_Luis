@@ -141,20 +141,120 @@ public class MFR extends AbstractMFRalgorithm {
             				m=cpred.size();
             				cmfr.get(ctag).getValue().clear();
             				cmfr.get(ctag).getValue().add(cpred.get(0));
+            				
+            				
+            				//Check this... line 480 in c++ code?
+            				mfrs.remove(pointer);
+            				
+            				
+            				tags.remove(pointer);
+            				
+            				
+            				
+            				for (int i = 0; i < m; i++) {
+            					ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>temp1=cmfr;	
+            					temp1.get(ctag).getValue().clear();
+            					temp1.get(ctag).getValue().add(cpred.get(i));
+            					mfrs.add(pointer+i, temp1);
+            					tags.add(pointer+i,ctag);
+            					
+            				}
+            				mfr_count=mfr_count+m-1;
+            				
+            			}
+            			cpred=cmfr.get(ctag).getValue();
+            			boolean all_done=true;
+            			boolean chas;
+            			for (int i = 0; i < cpred.size(); i++) {
+            			int v=cpred.get(i);
+            			chas=false;
+            			for (int j = 0; j < cmfr.size(); j++) {
+            					if(cmfr.get(j).getKey()==v) {
+            						chas=true;
+            					}
+            			}
+            			if(chas) {
+            				continue;
+            			}
+            			all_done=false;
+            			SimpleEntry<Integer,ArrayList<Integer>> temp2 =invadj_list.get(v);
+            			cmfr.add(temp2);
+            			
+            			if(all_done) {
+            				if(ctag==cmfr.size()-1) {
+            					flag=true;
+            					
+            				}
+            				else {
+            					ctag++;
+            				}
+            				
+            			}
+            			else {ctag++;}
+            			
+            			
+            				
+            			}
+            		}
+            		mfrs.set(pointer, cmfr);
+            		pointer++;
+            		
+            	}
+            
+            	
+            	
+            	for (int i = mfrs.size() - 1; i >= 0; i--) {
+            	    boolean has_source = false;
+            	    for (int j = 0; j < mfrs.get(i).size(); j++) {
+            	    	if(mfrs.get(i).get(j).getKey()==nodeList.indexOf(source))
+            	    	{
+            	    		has_source=true;
+            	    		
+            	    	}
+            	    }
+            	    if (!has_source) {
+            	    	mfrs.remove(i);
+            	    	mfr_count--;
+            	    	
+            	    	
+            	    }
+            	}
+            
+            	ArrayList<ArrayList<Integer>> mfrs_egos=new ArrayList<ArrayList<Integer>>();
+            	for (int i = 0; i < mfrs.size(); i++) {
+            		ArrayList<Integer> mfr_egos=new ArrayList<Integer>();
+            		for (int j = 0; j < mfrs.get(i).size(); j++) {
+            			mfr_egos.add(mfrs.get(i).get(j).getKey());
+            		
+            		}
+            		mfrs_egos.add(mfr_egos);
+            	}
+            	
+            	ArrayList<CyEdge> mfrs_links=new ArrayList<CyEdge>();
+            	for (int i = 0; i < mfrs.size(); i++) {
+            		mfr=mfrs.get(i);
+            		
+            		int link_count =0;
+            		for (int j = 0; j < mfr.size(); j++) {
+            		      link_count += mfr.get(j).getValue().size();
+            		    }
+            		int[][] mfr_links  = new int[link_count][2];
+            		int link_row = 0;
+            		for (int j = 0; j < mfr.size(); j++) {	
+            			for (int k = 0; k < mfr.get(j).getValue().size(); k++) {
+            				mfr_links[link_row][0] = mfr.get(j).getValue().get(k);
+            		        mfr_links[link_row][1] = mfr.get(j).getKey();
+            		        link_row++;
             			}
             		}
             	}
+            		
+            
             }
-            
-            
-            
-            
-            
-            
             return completePaths;
             
             }
-
+			
 	@Override
 	public String fullName() {
 		return NAME;

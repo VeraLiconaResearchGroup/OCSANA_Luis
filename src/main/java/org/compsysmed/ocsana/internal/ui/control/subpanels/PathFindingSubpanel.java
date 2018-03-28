@@ -85,7 +85,11 @@ public class PathFindingSubpanel
         tunablePanel = new JPanel();
         setStandardLayout(tunablePanel);
         add(tunablePanel);
-        // CI configuration
+        // Compute MFRs?
+        
+        
+        
+        
         computeMFRs = new JCheckBox("Compute MFRs", contextBundleBuilder.getIncludeEndpointsInCIs());
         add(computeMFRs);
 
