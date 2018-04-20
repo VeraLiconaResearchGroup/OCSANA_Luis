@@ -33,7 +33,7 @@ public class MFRFindingAlgorithmTask extends AbstractOCSANATask {
     private final ContextBundle contextBundle;
     private final ResultsBundle resultsBundle;
     private final OCSANAStep algStep;
-    private Collection<List<CyEdge>> paths;
+    private Collection<List<CyEdge>> MFRs;
 
     public MFRFindingAlgorithmTask (RunnerTask runnerTask,
                                      ContextBundle contextBundle,
@@ -57,66 +57,61 @@ public class MFRFindingAlgorithmTask extends AbstractOCSANATask {
     @Override
     public void run (TaskMonitor taskMonitor) {
         Objects.requireNonNull(taskMonitor, "Task monitor cannot be null");
-
+//        contextBundle.getMFRs()
         String targetType;
         Set<CyNode> sourceNodes = contextBundle.getSourceNodes();
         Set<CyNode> targetsForThisRun;
-        switch (algStep) {
-        case FIND_PATHS_TO_TARGETS:
+
             targetType = "target";
             targetsForThisRun = contextBundle.getTargetNodes();
-            break;
 
-        case FIND_PATHS_TO_OFF_TARGETS:
-            targetType = "off-target";
-            targetsForThisRun = contextBundle.getOffTargetNodes();
-            break;
-
-        default:
-            throw new IllegalStateException("Invalid algorithm step for path-finding");
-        }
 
         Objects.requireNonNull(sourceNodes, "Source nodes not set by user");
         Objects.requireNonNull(targetsForThisRun, "Target nodes not set by user");
 
-        taskMonitor.setTitle(String.format("Paths to %ss", targetType));
+        taskMonitor.setTitle(String.format("Minimal Functional Routes to %ss", targetType));
 
         taskMonitor.setStatusMessage(String.format("Finding paths from %d source nodes to %d %s nodes (algorithm: %s).", sourceNodes.size(), targetsForThisRun.size(), targetType, contextBundle.getPathFindingAlgorithm().shortName()));
 
         Long preTime = System.nanoTime();
-        paths = contextBundle.getPathFindingAlgorithm().paths(sourceNodes, targetsForThisRun);
+        MFRs = contextBundle.getMFRAlgorithm().MinimalFunctionalRoutes(sourceNodes, targetsForThisRun);
         Long postTime = System.nanoTime();
 
         Double runTime = (postTime - preTime) / 1E9;
 
-        if (paths == null) {
+        if (MFRs == null) {
             return;
         }
-
-        switch (algStep) {
-        case FIND_PATHS_TO_TARGETS:
-            resultsBundle.setPathsToTargets(paths);
-            resultsBundle.setPathsToTargetsExecutionSeconds(runTime);
-            break;
-
-        case FIND_PATHS_TO_OFF_TARGETS:
-            resultsBundle.setPathsToOffTargets(paths);
-            resultsBundle.setPathsToOffTargetsExecutionSeconds(runTime);
-            break;
-
-        default:
+        
+        resultsBundle.setMFRs(MFRs);
+        resultsBundle.setMFRExecutionSeconds(runTime);
+        
+        
+        
+        
+//        switch (algStep) {
+//        case FIND_PATHS_TO_TARGETS:
+//            resultsBundle.setPathsToTargets(paths);
+//            break;
+//
+//        case FIND_PATHS_TO_OFF_TARGETS:
+//            resultsBundle.setPathsToOffTargets(paths);
+//            resultsBundle.setPathsToOffTargetsExecutionSeconds(runTime);
+//            break;
+//
+//        default:
             throw new IllegalStateException("Invalid algorithm step for path-finding");
         }
 
-        taskMonitor.showMessage(TaskMonitor.Level.INFO, String.format("Found %d paths in %fs.", paths.size(), runTime));
-    }
+       
+    
 
     /**
      * Return the paths found by this task (or null if the task has
      * not completed)
      **/
     public Collection<List<CyEdge>> getPaths () {
-        return paths;
+        return MFRs;
     }
 
     @Override

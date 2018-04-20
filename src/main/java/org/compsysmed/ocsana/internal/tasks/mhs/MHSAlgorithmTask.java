@@ -103,11 +103,42 @@ public class MHSAlgorithmTask extends AbstractOCSANATask {
         
         Long preMHSTime = System.nanoTime();
         Collection<Set<CyNode>> MHSes = contextBundle.getMHSAlgorithm().MHSes(nodeSets);
+
+//If you want to see the OCSANA scores of individual nodes printed to the console...        
+// System.out.println("EFFECT_ON_TARGETS(PI3K)"+resultsBundle.getOCSANAScores().EFFECT_ON_TARGETS(network.getNode(176)));
+//     System.out.println("SIDE_EFFECTS(PI3K)"+resultsBundle.getOCSANAScores().SIDE_EFFECTS(network.getNode(176)));
+//        System.out.println("OVERALL(PI3K)"+resultsBundle.getOCSANAScores().OVERALL(network.getNode(176)));
+//        System.out.println("OCSANA(PI3K)"+resultsBundle.getOCSANAScores().OCSANA(network.getNode(176)));
+//        
+//        System.out.println("EFFECT_ON_TARGETS(AKT)"+resultsBundle.getOCSANAScores().EFFECT_ON_TARGETS(network.getNode(73)));
+//        System.out.println("SIDE_EFFECTS(AKT)"+resultsBundle.getOCSANAScores().SIDE_EFFECTS(network.getNode(73)));
+//           System.out.println("OVERALL(AKT)"+resultsBundle.getOCSANAScores().OVERALL(network.getNode(73)));
+//           System.out.println("OCSANA(AKT)"+resultsBundle.getOCSANAScores().OCSANA(network.getNode(73)));
+//           
+//           System.out.println("EFFECT_ON_TARGETS(TSC)"+resultsBundle.getOCSANAScores().EFFECT_ON_TARGETS(network.getNode(165)));
+//           System.out.println("SIDE_EFFECTS(TSC)"+resultsBundle.getOCSANAScores().SIDE_EFFECTS(network.getNode(165)));
+//              System.out.println("OVERALL(TSC)"+resultsBundle.getOCSANAScores().OVERALL(network.getNode(165)));
+//              System.out.println("OCSANA(TSC)"+resultsBundle.getOCSANAScores().OCSANA(network.getNode(165)));
+//              
+//              
+//              System.out.println("EFFECT_ON_TARGETS(E2F)"+resultsBundle.getOCSANAScores().EFFECT_ON_TARGETS(network.getNode(112)));
+//              System.out.println("SIDE_EFFECTS(E2F)"+resultsBundle.getOCSANAScores().SIDE_EFFECTS(network.getNode(112)));
+//                 System.out.println("OVERALL(E2F)"+resultsBundle.getOCSANAScores().OVERALL(network.getNode(112)));
+//                 System.out.println("OCSANA(E2F)"+resultsBundle.getOCSANAScores().OCSANA(network.getNode(112)));
+//                 
+//                 System.out.println("EFFECT_ON_TARGETS(PIP3)"+resultsBundle.getOCSANAScores().EFFECT_ON_TARGETS(network.getNode(77)));
+//                 System.out.println("SIDE_EFFECTS(PIP3)"+resultsBundle.getOCSANAScores().SIDE_EFFECTS(network.getNode(77)));
+//                    System.out.println("OVERALL(PIP3)"+resultsBundle.getOCSANAScores().OVERALL(network.getNode(77)));
+//                    System.out.println("OCSANA(PIP3)"+resultsBundle.getOCSANAScores().OCSANA(network.getNode(77)));
+              
+          
         if (MHSes != null) {
           
         	
           resultsBundle.setCIs(MHSes.stream().map(mhs -> new CombinationOfInterventions(mhs, targetNodes, contextBundle.getNodeHandler()::getNodeName, contextBundle.getNodeHandler()::getNodeID, resultsBundle.getOCSANAScores().OCSANA(mhs))).collect(Collectors.toList()));
-          //THE LINE ABOVE IS GIVING AN EXCEPTION. I have already checked that MHSes is not null.
+          
+
+
         }
         
         Long postMHSTime = System.nanoTime();

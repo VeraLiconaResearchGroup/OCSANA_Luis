@@ -66,6 +66,8 @@ public class DijkstraPathDecoratorAlgorithm
      * passing through that edge and reaching some target, so long as
      * that number is not greater than maxPathLength
      **/
+    
+    //Just changed this from protected to public. 
     protected Map<CyEdge, Integer> edgeMinDistancesBackwards (Set<CyNode> targets) {
         return edgeMinDistances(targets, CyEdge.Type.INCOMING);
     }

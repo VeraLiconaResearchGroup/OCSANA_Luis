@@ -116,6 +116,7 @@ public class PathFindingSubpanel
 
     @Override
     public void updateContextBuilder () {
+    		contextBundleBuilder.setcomputeMFRs(computeMFRs.isSelected());
         contextBundleBuilder.setPathFindingAlgorithm(getAlgorithm());
     }
 }

@@ -113,7 +113,7 @@ public final class ContextBundle {
         Objects.requireNonNull(ocsanaAlgorithm, "OCSANA scoring algorithm cannot be null");
         this.ocsanaAlgorithm = ocsanaAlgorithm;
         
-        Objects.requireNonNull(MFRalgorithm, "OCSANA scoring algorithm cannot be null");
+        Objects.requireNonNull(MFRalgorithm, "MFR algorithm cannot be null");
         this.MFRalgorithm = MFRalgorithm;
         
         
@@ -128,7 +128,7 @@ public final class ContextBundle {
         Objects.requireNonNull(siScoringAlgorithm, "SI scoring algorithm cannot be null");
         this.siScoringAlgorithm = siScoringAlgorithm;
 
-        allAlgorithms = Arrays.asList(pathFindingAlgorithm, mhsAlgorithm, ocsanaAlgorithm, ciSignAlgorithm, siScoringAlgorithm);
+        allAlgorithms = Arrays.asList(pathFindingAlgorithm, mhsAlgorithm, ocsanaAlgorithm, ciSignAlgorithm, siScoringAlgorithm,MFRalgorithm);
 
         // Sanity checks
         if (sourceNodes.stream().anyMatch(node -> !network.containsNode(node))) {
@@ -243,7 +243,11 @@ public final class ContextBundle {
     public boolean getIncludeEndpointsInCIs () {
         return includeEndpointsInCIs;
     }
-
+    
+    
+    public boolean getcomputeMFRs () {
+        return computeMFRs;
+    }
     /**
      * Return the path-finding algorithm
      **/

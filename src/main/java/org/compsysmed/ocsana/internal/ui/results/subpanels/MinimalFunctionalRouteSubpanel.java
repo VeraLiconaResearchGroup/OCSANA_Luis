@@ -26,6 +26,10 @@ public MinimalFunctionalRouteSubpanel (ContextBundle contextBundle,
         MFRs = resultsBundle.getMFRs();
         
 
+   
+   
+   
+   
     if (MFRs != null) {
         List<String> MFRLines = new ArrayList<>();
         for (List<CyEdge> mfr: MFRs) {

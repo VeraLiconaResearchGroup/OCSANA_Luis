@@ -58,6 +58,7 @@ public class ContextBundleBuilder {
     private NodeHandler nodeHandler;
     private EdgeProcessor edgeProcessor;
     private boolean includeEndpointsInCIs;
+
     private boolean computeMFRs;
 
     private AbstractPathFindingAlgorithm pathFindingAlgorithm;
@@ -79,6 +80,14 @@ public class ContextBundleBuilder {
         setcomputeMFRs(false);
 
         setPathFindingAlgorithm(new AllNonSelfIntersectingPathsAlgorithm(network));
+        
+        
+        
+        setMFRalgorithm(new MFR(network));
+        
+        
+        
+        
         setMHSAlgorithm(new MMCSAlgorithm());
 
         ExhaustiveSearchCISignAssignmentAlgorithm exhaustiveAlgorithm = new ExhaustiveSearchCISignAssignmentAlgorithm();
@@ -238,6 +247,24 @@ public class ContextBundleBuilder {
     public boolean getIncludeEndpointsInCIs () {
         return includeEndpointsInCIs;
     }
+    
+    
+    
+    /**
+     * Set the mfr algorithm
+     **/
+    public void setMFRalgorithm (AbstractMFRalgorithm MFRAlgorithm) {
+        Objects.requireNonNull(pathFindingAlgorithm, "MFR algorithm cannot be null");
+
+        this.MFRalgorithm = MFRAlgorithm;
+    }
+
+//    /**
+//     * Return the currently-selected path-finding algorithm
+//     **/
+//    public AbstracMFRAlgorithm getPathFindingAlgorithm () {
+//        return pathFindingAlgorithm;
+//    }
     
     
     

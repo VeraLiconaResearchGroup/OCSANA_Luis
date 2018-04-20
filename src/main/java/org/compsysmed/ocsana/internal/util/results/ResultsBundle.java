@@ -35,9 +35,10 @@ public class ResultsBundle {
     
     private Double pathsToTargetsExecutionSeconds;
     private Double pathsToOffTargetsExecutionSeconds;
+    private Double MFRExecutionSeconds;
 
     private Boolean pathFindingCanceled = false;
-
+    private Boolean MFRFindingCanceled = false;
     // Scoring data
     private Double OCSANAScoringExecutionSeconds;
     private Boolean OCSANAScoringCanceled = false;
@@ -66,7 +67,8 @@ public class ResultsBundle {
     }
     
     public void setMFRs (Collection<List<CyEdge>> MFRs) {
-        Objects.requireNonNull(pathsToTargets, "Collection of MFRs to targets cannot be null");
+    	if (MFRs!=null)
+//        Objects.requireNonNull(MFRs, "Collection of MFRs to targets cannot be null");
         this.MFRs = MFRs;
     }
 
@@ -87,6 +89,11 @@ public class ResultsBundle {
         Objects.requireNonNull(pathsToTargetsExecutionSeconds, "Time to compute paths to targets cannot be null");
         this.pathsToTargetsExecutionSeconds = pathsToTargetsExecutionSeconds;
     }
+    
+    public void setMFRExecutionSeconds (Double MFRExecutionSeconds) {
+        Objects.requireNonNull(MFRExecutionSeconds, "Time to compute MFR to targets cannot be null");
+        this.MFRExecutionSeconds = MFRExecutionSeconds;
+    }
 
     public Double getPathsToOffTargetsExecutionSeconds () {
         return pathsToOffTargetsExecutionSeconds;
@@ -103,6 +110,14 @@ public class ResultsBundle {
 
     public void setPathFindingWasCanceled () {
         pathFindingCanceled = true;
+    }
+    
+    public Boolean MFRFindingWasCanceled () {
+        return MFRFindingCanceled;
+    }
+
+    public void setMFRFindingWasCanceled () {
+        MFRFindingCanceled = true;
     }
 
     public Double getOCSANAScoringExecutionSeconds () {

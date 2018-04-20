@@ -107,6 +107,8 @@ public class OCSANAScoringAlgorithmTest {
         //assertEquals("Toy network score: D", -1.0d, scores.OCSANA(D), 0.0d); // TODO: write a test once this case is defined
         assertEquals("Toy network score: E", 18.0d, scores.OCSANA(E), 0.0d);
         assertEquals("Toy network score: F", 2.66d, scores.OCSANA(F), 0.01d);
+        assertEquals("Toy network score: E+F", 20.66d, scores.OCSANA(new HashSet<CyNode>(Arrays.asList(E, F))), 0.01d);
         assertEquals("Toy network score: C+E", 21.75d, scores.OCSANA(new HashSet<CyNode>(Arrays.asList(C, E))), 0.01d);
+        assertEquals("Toy network score: C+D+B", 8.0d, scores.OCSANA(new HashSet<CyNode>(Arrays.asList(C, D, B))), 0.01d);
     }
 }

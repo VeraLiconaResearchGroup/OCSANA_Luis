@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.TreeMap;
+
+//import static org.junit.Assert.assertNotNull;
+
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import org.cytoscape.model.CyColumn;
@@ -24,13 +27,139 @@ import org.cytoscape.model.CyRow;
 public class MFR extends AbstractMFRalgorithm {
 	private static final String NAME = "Compute minimal functional routes from source nodes to target nodes t";
 	private static final String SHORTNAME = "Single MFRs";
+	private int[] visitableNodes;
+	private int[][] adjacencyMatrix = null; 
+	private int[][] workMatrix = null;
+	private int Nnodes;
 
+	private int Nedges;
+	
+	//private int[] curr_pred;
+	int curr_mfr_index;//pointer
+	int mfr_count;
+	boolean is_mfr_complete; // aka flag
+	// 
+	
 	public MFR(CyNetwork network) {
 		super(network);
-		// TODO Auto-generated constructor stub
-
+		this.Nnodes = network.getNodeCount();
+		this.Nedges = network.getEdgeCount();
+		this.visitableNodes = new int[Nnodes];
 	}
-	CyTable nodeTable=network.getDefaultNodeTable();
+	
+//	private void initializeEdgeIDMaps(List<CyEdge> edgeList) {
+//		edgeSUIDToIndex = new HashMap<Long,Integer>(Nnodes);
+//		edgeIndexToSUID = new HashMap<Integer,Long>(Nnodes);
+////		compositeNodes = new int[Nnodes];
+//		int curr_index = 0;
+//		for(CyEdge  e : edgeList) {
+//			edgeSUIDToIndex.put(e.getSUID(), curr_index);
+//			edgeIndexToSUID.put(curr_index, e.getSUID());
+//			curr_index++;
+//		}
+//		maps_initialized = true;
+//	}
+	
+//	private void initializeNodeIDMaps(List<CyNode> nodeList) {
+//		nodeSUIDToIndex = new HashMap<Long,Integer>(Nnodes);
+//		nodeIndexToSUID = new HashMap<Integer,Long>(Nnodes);
+////		compositeNodes = new int[Nnodes];
+//		int curr_index = 0;
+//		for(CyNode u : nodeList) {
+//			nodeSUIDToIndex.put(u.getSUID(), curr_index);
+//			nodeIndexToSUID.put(curr_index, u.getSUID());
+//			curr_index++;
+//		}
+//		maps_initialized = true;
+//	}
+	
+//	private void initializeAdjMatrix(CyNetwork network) {
+//		adjacencyMatrix = new int[Nnodes][Nnodes];
+//		workMatrix = new int[Nnodes][Nnodes];
+//		List<CyNode> nodeList = network.getNodeList();
+//		int indexU, indexV;
+//		for (CyNode v : nodeList ) {
+//			indexV = nodeSUIDToIndex.get(v.getSUID());
+//			for (CyNode u :network.getNeighborList(v, CyEdge.Type.INCOMING)) {
+//				indexU = nodeSUIDToIndex.get(u.getSUID());
+//				adjacencyMatrix[indexV][indexU] = 1;
+//			}
+//		}
+//	}
+//	
+//private void initialize_adj_list(int[][] adjacency_matrix) {
+//	ArrayList<SimpleEntry<Integer,ArrayList<Integer>>> invadj_list=new ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>();
+//	
+//	for (int i=0; i<Nnodes;i++) {
+//		
+//
+//		ArrayList<Integer> incoming = new ArrayList<Integer>();
+//		for (int j=0;j<Nnodes;i++) {
+//			if (adjacency_matrix[i][j]==1) {
+//				incoming.add(j);
+//			}
+//		}
+//		invadj_list.add(new AbstractMap.SimpleEntry(i,incoming));
+//	}
+//	
+//	
+//	
+//	
+//	
+//}
+//	private void generate_link_array(CyNetwork network )
+//	{
+//		Integer[][] link_array =new Integer[Nedges][2];
+//	for(Integer i=0; i<Nedges;i++) {
+//		Integer source;
+//		Integer target; 
+//		source = nodeSUIDToIndex.get(network.getEdge(edgeIndexToSUID.get(i)).getSource().getSUID());
+//		target = nodeSUIDToIndex.get(network.getEdge(edgeIndexToSUID.get(i)).getTarget().getSUID());
+//		link_array[i][0]=source;
+//		link_array[i][1]=target;
+//	}
+//	
+//	}
+//	
+//	private void initializeCompositeNodeList(CyNetwork network, HashMap<Long, Integer> nodeSUIDToIndex) {
+//		final String IDcolumnName = network.getDefaultNodeTable().getPrimaryKey().getName();
+//		
+//		final Collection<CyRow> compositeRows = network.getDefaultNodeTable().getMatchingRows("composite", true);
+//		for (final CyRow row : compositeRows) {
+//			final Long nodeID = row.get(IDcolumnName, Long.class);
+//		
+//			if (nodeID == null)
+//				continue;
+//			final CyNode node = network.getNode(nodeID);
+//			if (node==null)
+//			continue;
+//			compositeNodes.add(nodeSUIDToIndex.get(node.getSUID()));
+//			
+//			
+//		
+			
+//			compositeNodes.add(nodeSUIDToIndex.get(nodeID));
+//		}
+//	}
+
+//	public void MFRInit(CyNetwork network) {
+//		List<CyNode> nodeList =network.getNodeList();
+//		List<CyEdge> edgeList =network.getEdgeList();
+//		if(!maps_initialized)
+//			initializeNodeIDMaps(nodeList);
+//			initializeEdgeIDMaps(edgeList);
+//		if(null == adjacencyMatrix) 
+//			initializeAdjMatrix(network);
+//		if(null == compositeNodes)
+//		initializeCompositeNodeList(network,nodeSUIDToIndex);
+////		generate_link_array(network );
+////		initialize_adj_list(adjacencyMatrix);
+////		
+//			
+//	}
+	
+	
+//	CyTable nodeTable=network.getDefaultNodeTable();
 
 	@Override
 	public Collection<List<CyEdge>> MinimalFunctionalRoutes(Set<CyNode> sources, Set<CyNode> targets) {
@@ -45,55 +174,66 @@ public class MFR extends AbstractMFRalgorithm {
 
 	public Collection<List<CyEdge>> computeMFRs (CyNode source,
             CyNode target)
-            {    			List<List<CyEdge>> completeMFRs = new ArrayList<>();
-			Deque<List<CyEdge>> incompleteMFRs = new LinkedList<>();
-			CyTable nodeTable=network.getDefaultNodeTable();
-			
-			List<List<CyEdge>> completePaths = new ArrayList<>();
-			Collection<CyRow> matchingRows = nodeTable.getMatchingRows("composite", true);
-			Set<CyNode> CompositeNodes = new HashSet<CyNode>();
-			
-			
-			
-			
-			String primaryKeyColname = nodeTable.getPrimaryKey().getName();
-			for (final CyRow row : matchingRows)
-			{
-				Long nodeId = row.get(primaryKeyColname, Long.class);
-				if (nodeId == null) {
-					
-				
-					continue;}
-				final CyNode node = network.getNode(nodeId);
-				if (node == null) {
-					continue;
-					
-				}
-				CompositeNodes.add(node);	
-			}
-			
-			
-			ArrayList<HashMap<Integer, ArrayList<Integer>>> Net = new ArrayList<HashMap<Integer, ArrayList<Integer>>>();
-			int cnode;
+            {   List<List<CyEdge>> completeMFRs = new ArrayList<>();
+            
+            
+        //Creating hashmap to back and forth between suid and index.    
+        List<CyNode> nodeList = network.getNodeList();
+        ArrayList<Integer> compositeNodes=new ArrayList<Integer>();
+//    		nodeSUIDToIndex = new HashMap<Long,Integer>(Nnodes);
+//    		nodeIndexToSUID = new HashMap<Integer,Long>(Nnodes);
+////    		compositeNodes = new int[Nnodes];
+//    		int curr_index = 0;
+//    		for(CyNode u : nodeList) {
+//    			nodeSUIDToIndex.put(u.getSUID(), curr_index);
+//    			nodeIndexToSUID.put(curr_index, u.getSUID());
+//    			curr_index++;
+//    		}        
+    		
+    		
+    		
+    		
+    		//Creating list of composite nodes
+    		
+    		final String IDcolumnName = network.getDefaultNodeTable().getPrimaryKey().getName();
+    		
+    		final Collection<CyRow> compositeRows = network.getDefaultNodeTable().getMatchingRows("composite", true);
+    		for (final CyRow row : compositeRows) {
+    			final Long nodeID = row.get(IDcolumnName, Long.class);
+    		
+    			if (nodeID == null)
+    				continue;
+    			final CyNode node = network.getNode(nodeID);
+    			if (node==null)
+    			continue;
+    			int t =nodeList.indexOf(node);
+    			compositeNodes.add(t);
+    		}
+    			
+    			List<SimpleEntry<Integer,ArrayList<Integer>>> invadj_list=new ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>();
+
+    				
+    				for (CyNode v : nodeList ) {
+    					List<Integer> incoming = new ArrayList<Integer>();
+    					int indexV = nodeList.indexOf(v);
+    					for (CyNode u :network.getNeighborList(v, CyEdge.Type.INCOMING)) {
+    						incoming.add(nodeList.indexOf(u));
+    				}
+    				invadj_list.add(new AbstractMap.SimpleEntry(nodeList.indexOf(v),incoming));
+    			}
+    		
+    		
+    		
+    		
+            
+            
+            
+            
+            int target_index =nodeList.indexOf(target);
+			int source_index=nodeList.indexOf(source);
 			int m;
-			
-			
-			
-			List<CyNode> nodeList = network.getNodeList();
-            
-            
-            ArrayList<SimpleEntry<Integer,ArrayList<Integer>>> invadj_list =new ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>();
-            for (CyNode v:nodeList) {
-            	
-            
-            	ArrayList<Integer> incoming = new ArrayList<Integer>();
-//            	
-            	for(CyNode u : network.getNeighborList(v, CyEdge.Type.INCOMING) ) { 		
-            		incoming.add(nodeList.indexOf(u));
-            	}
-            	invadj_list.add(new AbstractMap.SimpleEntry(nodeList.indexOf(v),incoming));
-            }
-            
+			int cnode;
+			List<Integer> cpred;
             //Pointer to the current partial MFR
             int pointer =0;
             
@@ -106,70 +246,126 @@ public class MFR extends AbstractMFRalgorithm {
             //Indicator that current partial MFR is complete
             boolean flag =false;
             
-            ArrayList<ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>> mfrs =new ArrayList<ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>>();
+            List<ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>> mfrs =new ArrayList<ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>>();
             
-            ArrayList<Integer> tags= new ArrayList<Integer>();
+            List<Integer> tags= new ArrayList<Integer>();
             
-            SimpleEntry<Integer,ArrayList<Integer>> to_target=invadj_list.get(nodeList.indexOf(target));
-            
+            SimpleEntry<Integer, ArrayList<Integer>> to_target = new SimpleEntry<Integer, ArrayList<Integer>>(target_index, new ArrayList<Integer>()) ;
+            for (int i:invadj_list.get(target_index).getValue()) {
+            	to_target.getValue().add(i);
+            }
           
             ArrayList<SimpleEntry<Integer,ArrayList<Integer>>> mfr =new ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>();
             mfr.add(to_target);
             mfrs.add(mfr);
-            
+            tags.add(0);
             while(pointer<mfr_count)
             {
             	flag =false;
-            	ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>cmfr=mfrs.get(pointer);
+            		//copying mfrs.get(pointer) to cmfr
+//            	ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>cmfr=new ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>(mfrs.get(pointer));
+            		ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>cmfr=new ArrayList<>();
+            	for (SimpleEntry<Integer, ArrayList<Integer>> entry:mfrs.get(pointer)) {
+            		int x=entry.getKey();
+            		cmfr.add(new SimpleEntry<Integer, ArrayList<Integer>>(x, new ArrayList<Integer>()) );
+            		int last_index =cmfr.size()-1;
+            			for (int i:entry.getValue()) {
+                    cmfr.get(last_index).getValue().add(i);
+            		
+            	}
+            	}
+                    
+            	
             	int ctag=tags.get(pointer);
             	
             	while(!flag) {
-            		cnode=cmfr.get(ctag).getKey();
-            		ArrayList<Integer> cpred = cmfr.get(ctag).getValue();
-            		if (cpred.size()==0) {
+            		int p=cmfr.get(ctag).getKey();
+            		cnode=p;
+            		//Make copy of cmfr.get(ctag).getValue())
+//            		cpred = new ArrayList<Integer>(cmfr.get(ctag).getValue()) ;
+            		cpred = new ArrayList<Integer>();
+            		for (int i:cmfr.get(ctag).getValue()) {
+            			cpred.add(i);
+            		}
+            		
+            		
+            		
+            		
+            		if (cpred.size()==0) { 
             			if (ctag==cmfr.size()-1) {
             				flag=true;
             				
             			}
             			else {
-            				ctag+=1;
+            				ctag++;
             			}
             			
             		}
             		else {
-            			if (!CompositeNodes.contains(nodeList.get(cnode))){
+            			
+            			// split current MFR into many with one in-link each
+            			if (!compositeNodes.contains(cnode)){
             				m=cpred.size();
             				cmfr.get(ctag).getValue().clear();
             				cmfr.get(ctag).getValue().add(cpred.get(0));
-            				
-            				
-            				//Check this... line 480 in c++ code?
+//            				ArrayList<Integer> temp = new ArrayList<Integer>();
+//            				temp.add(cpred.get(0));
+//            				//Reason for having temp is we can't do .add for simple map
+//            				cmfr.add(ctag, new SimpleEntry<Integer, ArrayList<Integer>>(cmfr.get(ctag).getKey(), temp)); 
             				mfrs.remove(pointer);
-            				
-            				
+//            				
+//            				
             				tags.remove(pointer);
             				
             				
             				
             				for (int i = 0; i < m; i++) {
-            					ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>temp1=cmfr;	
+            					
+            				//Making copy of cmfr
+            			     ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>temp1=new ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>();
+            	            	for (SimpleEntry<Integer, ArrayList<Integer>> entry:cmfr) {
+            	            		int x=entry.getKey();
+            	            		temp1.add(new SimpleEntry<Integer, ArrayList<Integer>>(x, new ArrayList<Integer>()) );
+            	            		int last_index =temp1.size()-1;
+            	            			for (int u:entry.getValue()) {
+            	                    temp1.get(last_index).getValue().add(u);
+            	            		
+            	            	}
+            	            	}
+            	            	
+            					
+            					
+            					
+            					
+            					
+            					
+            					
             					temp1.get(ctag).getValue().clear();
             					temp1.get(ctag).getValue().add(cpred.get(i));
-            					mfrs.add(pointer+i, temp1);
-            					tags.add(pointer+i,ctag);
+            	
+            					
+            					mfrs.add(pointer+i, new ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>(temp1));
+            					//mfrs.add(pointer+i, temp1);
+            					
+            					
+            					tags.add(pointer+i, ctag);
             					
             				}
             				mfr_count=mfr_count+m-1;
             				
             			}
-            			cpred=cmfr.get(ctag).getValue();
+            			cpred.clear();
+            			for (int k:cmfr.get(ctag).getValue()) {
+            				cpred.add(k);
+            			}
+            			
             			boolean all_done=true;
             			boolean chas;
             			for (int i = 0; i < cpred.size(); i++) {
             			int v=cpred.get(i);
             			chas=false;
             			for (int j = 0; j < cmfr.size(); j++) {
-            					if(cmfr.get(j).getKey()==v) {
+            					if(cmfr.get(j).getKey().equals(v)) {
             						chas=true;
             					}
             			}
@@ -177,8 +373,15 @@ public class MFR extends AbstractMFRalgorithm {
             				continue;
             			}
             			all_done=false;
-            			SimpleEntry<Integer,ArrayList<Integer>> temp2 =invadj_list.get(v);
-            			cmfr.add(temp2);
+            			
+//            			SimpleEntry<Integer,ArrayList<Integer>> temp2 =new SimpleEntry<Integer,ArrayList<Integer>>(invadj_list.get(v));
+            			int t=invadj_list.get(v).getKey();
+            			cmfr.add(new SimpleEntry<Integer, ArrayList<Integer>>(t, new ArrayList<Integer>()));
+            			int size=cmfr.size();
+            			for (int temp_int:invadj_list.get(v).getValue()) {
+            				cmfr.get(size-1).getValue().add(temp_int);
+            			}
+            			}
             			
             			if(all_done) {
             				if(ctag==cmfr.size()-1) {
@@ -190,7 +393,10 @@ public class MFR extends AbstractMFRalgorithm {
             				}
             				
             			}
-            			else {ctag++;}
+            			else {ctag++;
+            			
+            			
+            			}
             			
             			
             				
@@ -206,7 +412,7 @@ public class MFR extends AbstractMFRalgorithm {
             	for (int i = mfrs.size() - 1; i >= 0; i--) {
             	    boolean has_source = false;
             	    for (int j = 0; j < mfrs.get(i).size(); j++) {
-            	    	if(mfrs.get(i).get(j).getKey()==nodeList.indexOf(source))
+            	    	if(mfrs.get(i).get(j).getKey().equals(source_index))
             	    	{
             	    		has_source=true;
             	    		
@@ -245,15 +451,18 @@ public class MFR extends AbstractMFRalgorithm {
             				mfr_links[link_row][0] = mfr.get(j).getValue().get(k);
             		        mfr_links[link_row][1] = mfr.get(j).getKey();
             		        link_row++;
+            		        
             			}
             		}
             	}
-            		
-            
+            	return completeMFRs;
             }
-            return completePaths;
             
-            }
+            
+    		
+            
+
+	
 			
 	@Override
 	public String fullName() {

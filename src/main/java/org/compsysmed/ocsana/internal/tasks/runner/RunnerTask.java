@@ -26,6 +26,7 @@ import org.cytoscape.work.TaskObserver;
 import org.compsysmed.ocsana.internal.tasks.OCSANAStep;
 import org.compsysmed.ocsana.internal.tasks.drugability.SignedInterventionScoringAlgorithmTaskFactory;
 import org.compsysmed.ocsana.internal.tasks.mhs.MHSAlgorithmTaskFactory;
+import org.compsysmed.ocsana.internal.tasks.MinimalFunctionalRoute.MinimalFunctionalRouteAlgorithmTaskFactory;
 import org.compsysmed.ocsana.internal.tasks.path.PathFindingAlgorithmTaskFactory;
 import org.compsysmed.ocsana.internal.tasks.results.PresentResultsTaskFactory;
 import org.compsysmed.ocsana.internal.tasks.scoring.OCSANAScoringTaskFactory;
@@ -124,6 +125,13 @@ public class RunnerTask
 
         taskManager.execute(mhsTaskFactory.createTaskIterator(), this);
     }
+    
+    private void spawnMFRTask () {
+    		MinimalFunctionalRouteAlgorithmTaskFactory mfrTaskFactory =
+            new MinimalFunctionalRouteAlgorithmTaskFactory(this, contextBundle, resultsBundle, OCSANAStep.FIND_MFRS);
+
+        taskManager.execute(mfrTaskFactory.createTaskIterator(), this);
+    }
 
     private void spawnSignAssignmentTask () {
         SignAssignmentAlgorithmTaskFactory ciSignTaskFactory =
@@ -188,9 +196,14 @@ public class RunnerTask
             break;
 
         case SCORE_PATHS:
-            spawnMHSTask();
+        	spawnMFRTask();
+            
             break;
 
+        case FIND_MFRS:
+        	spawnMHSTask();
+            break;
+            
         case FIND_MHSES:
             spawnSignAssignmentTask();
             break;

@@ -165,6 +165,7 @@ public class CIListSubpanel
                 return ci.size();
 
             case 2:
+            		
                 return ci.getOCSANAScore();
 
             case 3:

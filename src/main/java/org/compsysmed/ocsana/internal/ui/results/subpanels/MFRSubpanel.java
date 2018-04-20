@@ -30,7 +30,7 @@ public MFRSubpanel (ContextBundle contextBundle,
    
 
 
-        MFRs = resultsBundle.getPathsToTargets();
+        MFRs = resultsBundle.getMFRs();
 
 
         
