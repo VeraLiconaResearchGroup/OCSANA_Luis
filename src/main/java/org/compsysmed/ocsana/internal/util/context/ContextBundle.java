@@ -324,24 +324,28 @@ public final class ContextBundle {
     	Objects.requireNonNull(MFR, "Cannot convert a null MFR to a string");
 
         StringBuilder result = new StringBuilder();
+//
+//        // Handle first node
+//        try {
+//        	
+//            CyNode firstNode = MFR.iterator().next().getTarget();
+//            result.append(getNodeName(firstNode));
+//        } catch (NoSuchElementException e) {
+//            return result.toString();
+//        }
 
-        // Handle first node
-        try {
-            CyNode firstNode = MFR.iterator().next().getSource();
-            result.append(getNodeName(firstNode));
-        } catch (NoSuchElementException e) {
-            return result.toString();
-        }
 
-        // Each other node is a target
         for (CyEdge edge: MFR) {
-            if (edgeProcessor.edgeIsInhibition(edge)) {
-                result.append(" -| ");
+        		result.append(getNodeName(edge.getTarget()));
+        		if (edgeProcessor.edgeIsInhibition(edge)) {
+                result.append(" |- ");
             } else {
-                result.append(" -> ");
+                result.append(" <- ");
             }
-            result.append(getNodeName(edge.getTarget()));
+            result.append(getNodeName(edge.getSource()));
+            result.append("  ");            
         }
+        
 
         return result.toString();
     }

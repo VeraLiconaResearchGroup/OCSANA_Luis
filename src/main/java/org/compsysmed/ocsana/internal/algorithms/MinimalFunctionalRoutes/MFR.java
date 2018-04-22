@@ -425,36 +425,28 @@ public class MFR extends AbstractMFRalgorithm {
             	    	
             	    }
             	}
-            
-            	ArrayList<ArrayList<Integer>> mfrs_egos=new ArrayList<ArrayList<Integer>>();
-            	for (int i = 0; i < mfrs.size(); i++) {
-            		ArrayList<Integer> mfr_egos=new ArrayList<Integer>();
-            		for (int j = 0; j < mfrs.get(i).size(); j++) {
-            			mfr_egos.add(mfrs.get(i).get(j).getKey());
-            		
-            		}
-            		mfrs_egos.add(mfr_egos);
-            	}
             	
-            	ArrayList<CyEdge> mfrs_links=new ArrayList<CyEdge>();
-            	for (int i = 0; i < mfrs.size(); i++) {
-            		mfr=mfrs.get(i);
-            		
-            		int link_count =0;
-            		for (int j = 0; j < mfr.size(); j++) {
-            		      link_count += mfr.get(j).getValue().size();
-            		    }
-            		int[][] mfr_links  = new int[link_count][2];
-            		int link_row = 0;
-            		for (int j = 0; j < mfr.size(); j++) {	
-            			for (int k = 0; k < mfr.get(j).getValue().size(); k++) {
-            				mfr_links[link_row][0] = mfr.get(j).getValue().get(k);
-            		        mfr_links[link_row][1] = mfr.get(j).getKey();
-            		        link_row++;
-            		        
+            	
+            	
+            	//NOTICE THAT THIS ONLY RETURNS ONE EDGE CONNECTING TWO DISTINCT NODES. I.E. THIS MIGHT FAIL FOR MULTIGRAPHS!!
+            int temp_count=0;
+            	for (ArrayList<SimpleEntry<Integer, ArrayList<Integer>>> temp_mfr:mfrs) {
+            		completeMFRs.add(new ArrayList<>());
+            		for (SimpleEntry<Integer, ArrayList<Integer>> ego:temp_mfr) {
+            			//make sure there is a list of target nodes
+            			if (ego.getValue().size()==0){continue;}
+            			int in_node=ego.getKey();
+            			for(int target_node:ego.getValue()) {
+            				completeMFRs.get(temp_count).add(network.getConnectingEdgeList(nodeList.get(in_node),nodeList.get(target_node) ,CyEdge.Type.DIRECTED).get(0));
+            				
             			}
+            			
+            			
             		}
+            		temp_count++;
             	}
+            
+
             	return completeMFRs;
             }
             

@@ -228,14 +228,14 @@ public class ContextBundleBuilder {
     }
 
     /**
-     * Return whether to include endpoints in CIs
+     * Return whether to computeMFRs
      **/
     public boolean getMFRs () {
         return computeMFRs;
     }
     
     /**
-     * Set whether to include endpoints in CIs
+     * Set whether to compute MFRs
      **/
     public void setcomputeMFRs (boolean computeMFRs) {
         this.computeMFRs = computeMFRs;
