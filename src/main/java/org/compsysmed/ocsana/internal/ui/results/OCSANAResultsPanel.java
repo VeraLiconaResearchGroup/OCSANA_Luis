@@ -239,6 +239,11 @@ public class OCSANAResultsPanel
             resultsTabbedPane.addTab("Minimal Functional Routes",MFRSubpanel);
         }
         
+        if (resultsBundle.getMFRs() != null) {
+            MHSofMFRSSubpanel MHSOFMFRSubpanel =new MHSofMFRSSubpanel(contextBundle, resultsBundle, cySwingApplication.getJFrame());
+            resultsTabbedPane.addTab("Minimal Hitting Sets of mfrs",MHSOFMFRSubpanel);
+        }
+        
     
 //        
 //        if (resultsBundle.getMFRs() != null) {

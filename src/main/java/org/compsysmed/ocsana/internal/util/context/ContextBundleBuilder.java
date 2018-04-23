@@ -58,7 +58,8 @@ public class ContextBundleBuilder {
     private NodeHandler nodeHandler;
     private EdgeProcessor edgeProcessor;
     private boolean includeEndpointsInCIs;
-
+    
+    private boolean Includecomposite;
     private boolean computeMFRs;
 
     private AbstractPathFindingAlgorithm pathFindingAlgorithm;
@@ -78,6 +79,7 @@ public class ContextBundleBuilder {
         setEdgeProcessor(new EdgeProcessor(network));
         setIncludeEndpointsInCIs(false);
         setcomputeMFRs(false);
+        setIncludecomposite(false);
 
         setPathFindingAlgorithm(new AllNonSelfIntersectingPathsAlgorithm(network));
         
@@ -226,7 +228,34 @@ public class ContextBundleBuilder {
     public void setIncludeEndpointsInCIs (boolean includeEndpointsInCIs) {
         this.includeEndpointsInCIs = includeEndpointsInCIs;
     }
+    
+    /**
+     * Return whether to include endpoints in CIs
+     **/
+    public boolean getIncludeEndpointsInCIs () {
+        return includeEndpointsInCIs;
+    }
+    
 
+    
+    /**
+     * Return whether to include composite Nodes in Computations of MHS of MFRs
+     **/
+    public boolean getIncludecomposite () {
+        return Includecomposite;
+    }
+    
+    
+    /**
+     * Set whether to include endpoints in MHSOFMFRs
+     **/
+    public void setIncludecomposite(boolean Includecomposite) {
+        this.Includecomposite = Includecomposite;
+    }
+    
+    
+    
+    
     /**
      * Return whether to computeMFRs
      **/
@@ -241,12 +270,8 @@ public class ContextBundleBuilder {
         this.computeMFRs = computeMFRs;
     }
 
-    /**
-     * Return whether to include endpoints in CIs
-     **/
-    public boolean getIncludeEndpointsInCIs () {
-        return includeEndpointsInCIs;
-    }
+
+    
     
     
     
@@ -349,6 +374,6 @@ public class ContextBundleBuilder {
      * Return the context as currently configured
      **/
     public ContextBundle getContextBundle () {
-        return new ContextBundle(network, sourceNodes, targetNodes, offTargetNodes, nodeHandler, edgeProcessor, includeEndpointsInCIs, computeMFRs, pathFindingAlgorithm, mhsAlgorithm, MFRalgorithm, ocsanaAlgorithm, targetsToActivate, ciSignAlgorithm, siScoringAlgorithm);
+        return new ContextBundle(network, sourceNodes, targetNodes, offTargetNodes, nodeHandler, edgeProcessor, includeEndpointsInCIs, Includecomposite, computeMFRs, pathFindingAlgorithm, mhsAlgorithm, MFRalgorithm, ocsanaAlgorithm, targetsToActivate, ciSignAlgorithm, siScoringAlgorithm);
     }
 }

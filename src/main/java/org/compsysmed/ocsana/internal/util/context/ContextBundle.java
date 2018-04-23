@@ -52,6 +52,7 @@ public final class ContextBundle {
     private final NodeHandler nodeHandler;
     private final EdgeProcessor edgeProcessor;
     private final boolean includeEndpointsInCIs;
+    private final boolean Includecomposite;
     private final boolean computeMFRs;
     private final AbstractPathFindingAlgorithm pathFindingAlgorithm;
     private final AbstractMHSAlgorithm mhsAlgorithm;
@@ -66,6 +67,8 @@ public final class ContextBundle {
 
     private final Collection<AbstractOCSANAAlgorithm> allAlgorithms;
 
+
+
     public ContextBundle (CyNetwork network,
                           Set<CyNode> sourceNodes,
                           Set<CyNode> targetNodes,
@@ -73,6 +76,7 @@ public final class ContextBundle {
                           NodeHandler nodeHandler,
                           EdgeProcessor edgeProcessor,
                           boolean includeEndpointsInCIs,
+                          boolean Includecomposite,
                           boolean computeMFRs,
                           AbstractPathFindingAlgorithm pathFindingAlgorithm,
                           AbstractMHSAlgorithm mhsAlgorithm,
@@ -101,6 +105,8 @@ public final class ContextBundle {
         this.edgeProcessor = edgeProcessor;
 
         this.includeEndpointsInCIs = includeEndpointsInCIs;
+        
+        this.Includecomposite= Includecomposite;
         
         this.computeMFRs=computeMFRs;
 
@@ -244,7 +250,18 @@ public final class ContextBundle {
         return includeEndpointsInCIs;
     }
     
+    /**
+     * Return whether to include compositeNodes in CIs for MFRs
+     **/
+    public boolean getIncludecomposite () {
+        return Includecomposite;
+    }
     
+    
+    
+    /**
+     * Return whether to compute MFRs
+     **/
     public boolean getcomputeMFRs () {
         return computeMFRs;
     }

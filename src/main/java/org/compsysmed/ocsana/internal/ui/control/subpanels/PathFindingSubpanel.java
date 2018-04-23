@@ -45,6 +45,7 @@ public class PathFindingSubpanel
     private JPanel algSelectionPanel;
     private JComboBox<AbstractPathFindingAlgorithm> algorithmSelecter;
     private JCheckBox computeMFRs;
+    private JCheckBox includeCompositeNodes;
     private JPanel tunablePanel;
 
     /**
@@ -90,8 +91,11 @@ public class PathFindingSubpanel
         
         
         // Compute MFRs?
-        computeMFRs = new JCheckBox("Compute MFRSs", contextBundleBuilder.getMFRs());
+        computeMFRs = new JCheckBox("Compute MFRs", contextBundleBuilder.getMFRs());
         add(computeMFRs);
+        
+        includeCompositeNodes = new JCheckBox("Include Composite Nodes", contextBundleBuilder.getIncludecomposite());
+        add(includeCompositeNodes);
 
         updateTunablePanel();
     }
@@ -118,5 +122,7 @@ public class PathFindingSubpanel
     public void updateContextBuilder () {
     		contextBundleBuilder.setcomputeMFRs(computeMFRs.isSelected());
         contextBundleBuilder.setPathFindingAlgorithm(getAlgorithm());
+        contextBundleBuilder.setIncludecomposite(includeCompositeNodes.isSelected());
+        
     }
 }

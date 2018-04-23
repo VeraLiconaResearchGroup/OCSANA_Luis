@@ -1,17 +1,5 @@
-/**
- * Task to run MHS algorithm in OCSANA
- *
- * Copyright Vera-Licona Research Group (C) 2015
- *
- * This software is licensed under the Artistic License 2.0, see the
- * LICENSE file or
- * http://www.opensource.org/licenses/artistic-license-2.0.php for
- * details
- **/
+package org.compsysmed.ocsana.internal.tasks.mhsofmfrs;
 
-package org.compsysmed.ocsana.internal.tasks.mhs;
-
-// Java imports
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,6 +7,7 @@ import java.util.stream.Collectors;
 import org.cytoscape.work.TaskMonitor;
 
 import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyEdge;
 
 // OCSANA imports
@@ -30,14 +19,14 @@ import org.compsysmed.ocsana.internal.util.context.ContextBundle;
 import org.compsysmed.ocsana.internal.util.results.ResultsBundle;
 import org.compsysmed.ocsana.internal.util.results.CombinationOfInterventions;
 
-public class MHSAlgorithmTask extends AbstractOCSANATask {
-    private static final OCSANAStep algStep = OCSANAStep.FIND_MHSES;
+public class MHSOFMFRAlgorithmTask extends AbstractOCSANATask {
+    private static final OCSANAStep algStep = OCSANAStep.FIND_MHSES_OF_MFRS;
 
     private final RunnerTask runnerTask;
     private final ContextBundle contextBundle;
     private final ResultsBundle resultsBundle;
 
-    public MHSAlgorithmTask (RunnerTask runnerTask,
+    public MHSOFMFRAlgorithmTask (RunnerTask runnerTask,
                              ContextBundle contextBundle,
                              ResultsBundle resultsBundle) {
         super(contextBundle.getNetwork());
@@ -57,20 +46,35 @@ public class MHSAlgorithmTask extends AbstractOCSANATask {
         if (resultsBundle.pathFindingWasCanceled()) {
             return;
         }
+        taskMonitor.setTitle("Minimal Hitting Sets of MFRs");
+        if (contextBundle.getcomputeMFRs()) {
+        taskMonitor.setTitle("Minimal Hitting Sets of MFRs");
 
-        taskMonitor.setTitle("Minimal CIs");
+        Objects.requireNonNull(resultsBundle.getMFRs(), "MFRs not set.");
 
-        Objects.requireNonNull(resultsBundle.getPathsToTargets(), "Paths to targets not set.");
-
-        taskMonitor.setStatusMessage(String.format("Converting %d paths to node sets.", resultsBundle.getPathsToTargets().size()));
+        taskMonitor.setStatusMessage(String.format("Converting %d MFRs to node sets.", resultsBundle.getMFRs().size()));
         Long preConversionTime = System.nanoTime();
         List<Set<CyNode>> nodeSets = new ArrayList<>();
         Set<CyNode> sourceNodes = contextBundle.getSourceNodes();
         Set<CyNode> targetNodes = contextBundle.getTargetNodes();
 
-        for (List<CyEdge> path: resultsBundle.getPathsToTargets()) {
+        for (List<CyEdge> path: resultsBundle.getMFRs()) {
             Set<CyNode> nodes = new HashSet<>();
-
+    		//Creating list of composite nodes
+    		
+    		final String IDcolumnName = network.getDefaultNodeTable().getPrimaryKey().getName();
+    		List<CyNode> compositeNodes=new ArrayList<>();
+    		final Collection<CyRow> compositeRows = network.getDefaultNodeTable().getMatchingRows("composite", true);
+    		for (final CyRow row : compositeRows) {
+    			final Long nodeID = row.get(IDcolumnName, Long.class);
+    		
+    			if (nodeID == null)
+    				continue;
+    			final CyNode node = network.getNode(nodeID);
+    			if (node==null)
+    			continue;
+    			compositeNodes.add(node);
+    		}
             // Scan every edge in the path, adding its nodes as
             // appropriate
             for (int i = 0; i <= path.size() - 1; i++) {
@@ -80,13 +84,18 @@ public class MHSAlgorithmTask extends AbstractOCSANATask {
                 // add the source and target every time
                 if (contextBundle.getIncludeEndpointsInCIs() ||
                     (!sourceNodes.contains(edge.getSource()) && !targetNodes.contains(edge.getSource()))) {
+                		if (contextBundle.getIncludecomposite()|!compositeNodes.contains(edge.getSource())) {
+                			
                     nodes.add(edge.getSource());
+                    }
                 }
 
               
                 if (
                     (!sourceNodes.contains(edge.getTarget()) && !targetNodes.contains(edge.getTarget()))) {
-                    nodes.add(edge.getTarget());
+                	if (contextBundle.getIncludecomposite()||!compositeNodes.contains(edge.getTarget())) {    
+                	nodes.add(edge.getTarget());
+                	}
                 }
             }
 
@@ -97,27 +106,31 @@ public class MHSAlgorithmTask extends AbstractOCSANATask {
         Long postConversionTime = System.nanoTime();
 
         Double conversionTime = (postConversionTime - preConversionTime) / 1E9;
-        taskMonitor.setStatusMessage(String.format("Converted paths in %f s.", conversionTime));
+        taskMonitor.setStatusMessage(String.format("Converted MFRs in %f s.", conversionTime));
 
         taskMonitor.setStatusMessage(String.format("Finding minimal combinations of interventions (algorithm: %s).", contextBundle.getMHSAlgorithm().shortName()));
         
-        Long preMHSTime = System.nanoTime();
-        Collection<Set<CyNode>> MHSes = contextBundle.getMHSAlgorithm().MHSes(nodeSets);
-        if (MHSes != null) {
+        Long preMHSOFMFRSTime = System.nanoTime();
+        Collection<Set<CyNode>> MHSOFMFRS = contextBundle.getMHSAlgorithm().MHSes(nodeSets);
+        if (MHSOFMFRS != null) {
           
         	
-          resultsBundle.setCIs(MHSes.stream().map(mhs -> new CombinationOfInterventions(mhs, targetNodes, contextBundle.getNodeHandler()::getNodeName, contextBundle.getNodeHandler()::getNodeID, resultsBundle.getOCSANAScores().OCSANA(mhs))).collect(Collectors.toList()));
+          resultsBundle.setMHSOFMFRS(MHSOFMFRS.stream().map(mhsofmfrs -> new CombinationOfInterventions(mhsofmfrs, targetNodes, contextBundle.getNodeHandler()::getNodeName, contextBundle.getNodeHandler()::getNodeID, resultsBundle.getOCSANAScores().OCSANA(mhsofmfrs))).collect(Collectors.toList()));
           //THE LINE ABOVE IS GIVING AN EXCEPTION. I have already checked that MHSes is not null.
         }
         
-        Long postMHSTime = System.nanoTime();
+        Long postMHSOFMFRSTime = System.nanoTime();
 
-        Double mhsTime = (postMHSTime - preMHSTime) / 1E9;
+        Double mhsofmfrsTime = (postMHSOFMFRSTime - preMHSOFMFRSTime) / 1E9;
 
-        taskMonitor.showMessage(TaskMonitor.Level.INFO, String.format("Found %d minimal CIs in %f s.", resultsBundle.getCIs().size(), mhsTime));
+        taskMonitor.showMessage(TaskMonitor.Level.INFO, String.format("Found %d minimal CIs in %f s.", resultsBundle.getMHSOFMFRS().size(), mhsofmfrsTime));
 
-        resultsBundle.setMHSExecutionSeconds(mhsTime);
+        resultsBundle.setMHSOFMFRSExecutionSeconds(mhsofmfrsTime);
     }
+        else {
+        	taskMonitor.setStatusMessage("Minimal Functional Routes were not requested");}
+    }
+    
     
     
     
@@ -130,7 +143,7 @@ public class MHSAlgorithmTask extends AbstractOCSANATask {
         if (type.isAssignableFrom(OCSANAStep.class)) {
             return (T) algStep;
         } else {
-            return (T) resultsBundle.getCIs();
+            return (T) resultsBundle.getMHSOFMFRS();
         }
     }
 
@@ -138,7 +151,7 @@ public class MHSAlgorithmTask extends AbstractOCSANATask {
     public void cancel () {
         super.cancel();
         contextBundle.getMHSAlgorithm().cancel();
-        resultsBundle.setMHSFindingWasCancelled();
+        resultsBundle.setMHSOFMFRSFindingWasCanceled();
         runnerTask.cancel();
     }
 }

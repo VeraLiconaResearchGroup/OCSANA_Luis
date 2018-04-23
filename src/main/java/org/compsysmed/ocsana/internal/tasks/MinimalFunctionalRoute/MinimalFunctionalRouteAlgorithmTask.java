@@ -1,7 +1,7 @@
 package org.compsysmed.ocsana.internal.tasks.MinimalFunctionalRoute;
 
 /**
- * Task to run path-finding algorithm in OCSANA
+ * Task to run minimal functional route in OCSANA
  *
  * Copyright Vera-Licona Research Group (C) 2015
  *

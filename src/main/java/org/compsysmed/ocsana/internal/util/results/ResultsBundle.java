@@ -26,19 +26,20 @@ public class ResultsBundle {
     // Paths data
     private Collection<List<CyEdge>> pathsToTargets;
     private Collection<List<CyEdge>> pathsToOffTargets;
-
-    //MFR data     
-    private Collection<List<CyEdge>> MFRs;
-    
-    
-    
-    
+    private Boolean pathFindingCanceled = false;
     private Double pathsToTargetsExecutionSeconds;
     private Double pathsToOffTargetsExecutionSeconds;
+    //MFR data     
+    private Collection<List<CyEdge>> MFRs;
     private Double MFRExecutionSeconds;
+    
+    
+    
 
-    private Boolean pathFindingCanceled = false;
+    
+
     private Boolean MFRFindingCanceled = false;
+    
     // Scoring data
     private Double OCSANAScoringExecutionSeconds;
     private Boolean OCSANAScoringCanceled = false;
@@ -48,6 +49,18 @@ public class ResultsBundle {
     private Collection<CombinationOfInterventions> CIs;
     private Double mhsExecutionSeconds;
     private Boolean mhsFindingCanceled = false;
+    
+    
+    
+    private Collection<CombinationOfInterventions> MHSOFMFRS;
+    
+    
+    
+    
+    
+    private Boolean MHSOFMFRSFindingCanceled = false;
+    private Double mhsofmfrsExecutionSeconds;
+
 
     // Intervention sign data
     private Map<CombinationOfInterventions, Collection<SignedIntervention>> optimalInterventionSignings = new HashMap<>();
@@ -67,8 +80,8 @@ public class ResultsBundle {
     }
     
     public void setMFRs (Collection<List<CyEdge>> MFRs) {
-    	if (MFRs!=null)
-//        Objects.requireNonNull(MFRs, "Collection of MFRs to targets cannot be null");
+
+    		Objects.requireNonNull(MFRs, "Collection of MFRs to targets cannot be null");
         this.MFRs = MFRs;
     }
 
@@ -117,9 +130,17 @@ public class ResultsBundle {
     }
 
     public void setMFRFindingWasCanceled () {
-        MFRFindingCanceled = true;
+       MFRFindingCanceled = true;
     }
 
+    public Boolean MHSOFMFRSFindingWasCanceled () {
+        return MHSOFMFRSFindingCanceled;
+    }
+
+    public void setMHSOFMFRSFindingWasCanceled () {
+        MHSOFMFRSFindingCanceled = true;
+    }
+    
     public Double getOCSANAScoringExecutionSeconds () {
         return OCSANAScoringExecutionSeconds;
     }
@@ -153,15 +174,40 @@ public class ResultsBundle {
         Objects.requireNonNull(CIs, "Collection of CIs cannot be null");
         this.CIs = CIs;
     }
+    
+    public Collection<CombinationOfInterventions> getMHSOFMFRS () {
+        return MHSOFMFRS;
+    }
+   
+    
+     
+    public void setMHSOFMFRS (Collection<CombinationOfInterventions> MHSOFMFRS) {
+        Objects.requireNonNull(CIs, "Collection of CIs cannot be null");
+        this.MHSOFMFRS = MHSOFMFRS;
+    }
 
     public Double getMHSExecutionSeconds () {
         return mhsExecutionSeconds;
+    }
+    
+    public Double getMHSOFMFRSExecutionSeconds () {
+        return  mhsofmfrsExecutionSeconds;
     }
 
     public void setMHSExecutionSeconds (Double mhsExecutionSeconds) {
         Objects.requireNonNull(mhsExecutionSeconds, "Time to compute MHSes cannot be null");
         this.mhsExecutionSeconds = mhsExecutionSeconds;
     }
+    
+    public void setMHSOFMFRSExecutionSeconds (Double mhsofmfrsExecutionSeconds) {
+        Objects.requireNonNull(mhsofmfrsExecutionSeconds, "Time to compute MHSes cannot be null");
+        this.mhsofmfrsExecutionSeconds = mhsofmfrsExecutionSeconds;
+    }
+    
+    
+    
+    
+    
 
     public Boolean MHSFindingWasCanceled () {
         return mhsFindingCanceled;

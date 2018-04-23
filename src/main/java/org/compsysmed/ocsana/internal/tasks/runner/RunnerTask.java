@@ -26,6 +26,7 @@ import org.cytoscape.work.TaskObserver;
 import org.compsysmed.ocsana.internal.tasks.OCSANAStep;
 import org.compsysmed.ocsana.internal.tasks.drugability.SignedInterventionScoringAlgorithmTaskFactory;
 import org.compsysmed.ocsana.internal.tasks.mhs.MHSAlgorithmTaskFactory;
+import org.compsysmed.ocsana.internal.tasks.mhsofmfrs.MHSOFMFRAlgorithmTaskFactory;
 import org.compsysmed.ocsana.internal.tasks.MinimalFunctionalRoute.MinimalFunctionalRouteAlgorithmTaskFactory;
 import org.compsysmed.ocsana.internal.tasks.path.PathFindingAlgorithmTaskFactory;
 import org.compsysmed.ocsana.internal.tasks.results.PresentResultsTaskFactory;
@@ -118,6 +119,18 @@ public class RunnerTask
 
         taskManager.execute(scoringTaskFactory.createTaskIterator(), this);
     }
+    
+    private void spawnMHSOFMFRs () {
+        MHSOFMFRAlgorithmTaskFactory mhsofmfrAlgorithmTaskFactory =
+            new  MHSOFMFRAlgorithmTaskFactory(this, contextBundle, resultsBundle);
+
+        taskManager.execute(mhsofmfrAlgorithmTaskFactory.createTaskIterator(), this);
+    }
+    
+    
+    
+    
+    
 
     private void spawnMHSTask () {
         MHSAlgorithmTaskFactory mhsTaskFactory =
@@ -196,8 +209,7 @@ public class RunnerTask
             break;
 
         case SCORE_PATHS:
-        	spawnMFRTask();
-            
+        		spawnMFRTask();
             break;
 
         case FIND_MFRS:
@@ -205,8 +217,12 @@ public class RunnerTask
             break;
             
         case FIND_MHSES:
-            spawnSignAssignmentTask();
+        		spawnMHSOFMFRs();
             break;
+            
+        case FIND_MHSES_OF_MFRS:
+        		spawnSignAssignmentTask();
+        		break;
 
         case ASSIGN_CI_SIGNS:
             spawnSignedInterventionScoringTask();

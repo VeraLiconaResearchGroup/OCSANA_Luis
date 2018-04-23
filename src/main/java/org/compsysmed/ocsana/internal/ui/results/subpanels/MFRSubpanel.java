@@ -52,7 +52,7 @@ public MFRSubpanel (ContextBundle contextBundle,
         JScrollPane pathScrollPane = new JScrollPane(pathTextArea);
 
         setLayout(new BorderLayout());
-        String panelText = String.format("Found MFRs");
+        String panelText = String.format("Found Minimal Functional Routes");
         add(new JLabel(panelText), BorderLayout.PAGE_START);
         add(pathScrollPane, BorderLayout.CENTER);
     }
