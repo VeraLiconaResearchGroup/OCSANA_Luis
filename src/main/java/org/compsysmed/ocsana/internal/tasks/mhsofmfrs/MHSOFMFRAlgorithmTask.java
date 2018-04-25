@@ -64,6 +64,7 @@ public class MHSOFMFRAlgorithmTask extends AbstractOCSANATask {
     		
     		final String IDcolumnName = network.getDefaultNodeTable().getPrimaryKey().getName();
     		List<CyNode> compositeNodes=new ArrayList<>();
+    		Objects.requireNonNull(network.getDefaultNodeTable().getColumn("composite"), "There is no column with name composite");
     		final Collection<CyRow> compositeRows = network.getDefaultNodeTable().getMatchingRows("composite", true);
     		for (final CyRow row : compositeRows) {
     			final Long nodeID = row.get(IDcolumnName, Long.class);

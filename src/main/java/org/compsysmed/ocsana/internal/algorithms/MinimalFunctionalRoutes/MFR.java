@@ -7,6 +7,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.TreeMap;
@@ -81,7 +82,7 @@ public class MFR extends AbstractMFRalgorithm {
         ArrayList<Integer> compositeNodes=new ArrayList<Integer>();
     		
     		final String IDcolumnName = network.getDefaultNodeTable().getPrimaryKey().getName();
-    		
+    		Objects.requireNonNull(network.getDefaultNodeTable().getColumn("composite"), "There is no column with name composite. Make sure your column for naming composite nodes is titled composite.");
     		final Collection<CyRow> compositeRows = network.getDefaultNodeTable().getMatchingRows("composite", true);
     		for (final CyRow row : compositeRows) {
     			final Long nodeID = row.get(IDcolumnName, Long.class);
