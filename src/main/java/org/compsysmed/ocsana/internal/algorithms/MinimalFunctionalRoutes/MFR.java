@@ -21,6 +21,7 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.cytoscape.model.CyTable;
 import org.cytoscape.model.CyRow;
@@ -39,17 +40,39 @@ public class MFR extends AbstractMFRalgorithm {
 
 	@Override
 	public Collection<List<CyEdge>> MinimalFunctionalRoutes(Set<CyNode> sources, Set<CyNode> targets) {
+		
+		
+		
+		Set<Set<CyEdge>> SetOfMfrs =new HashSet();
+		Collection<List<CyEdge>> ComputedMinimalFunctionalRoutes=new HashSet() ;
 		Collection<List<CyEdge>> mfs = null;
 		for (CyNode sourceNode : sources) {
 			for (CyNode targetNode : targets) {
-				mfs = computeMFRs(sourceNode, targetNode);
+				
+				mfs = computeMFRs(sourceNode, targetNode, sources);
+				//Avoiding duplicates
+				for (List<CyEdge>mfr:mfs) {
+					if (SetOfMfrs.contains(mfr)){continue;}
+					else {
+					SetOfMfrs.add(new HashSet(mfr));
+					ComputedMinimalFunctionalRoutes.add(mfr);}
+					
+				}
 			}
 		}
-		return mfs;
+
+		
+		
+		
+		
+		
+		
+		
+		return ComputedMinimalFunctionalRoutes;
 	}
 
 	public Collection<List<CyEdge>> computeMFRs (CyNode source,
-            CyNode target)
+            CyNode target,Set<CyNode> sources)
             {   List<List<CyEdge>> completeMFRs = new ArrayList<>();
             
             
@@ -284,21 +307,30 @@ public class MFR extends AbstractMFRalgorithm {
             	
             	
             	//NOTICE THAT THIS ONLY RETURNS ONE EDGE CONNECTING TWO DISTINCT NODES. I.E. THIS MIGHT FAIL FOR MULTIGRAPHS!!
-            int temp_count=0;
             	for (ArrayList<SimpleEntry<Integer, ArrayList<Integer>>> temp_mfr:mfrs) {
             		completeMFRs.add(new ArrayList<>());
             		for (SimpleEntry<Integer, ArrayList<Integer>> ego:temp_mfr) {
-            			//make sure there is a list of target nodes
-            			if (ego.getValue().size()==0){continue;}
+            			
+            			
             			int in_node=ego.getKey();
+            			//if I encounter  a node without an incoming node that is not a source noe, this is not an MFR so do not add to the list.
+            			if (ego.getValue().size()==0 && !sources.contains(nodeList.get(in_node))){
+            				completeMFRs.remove(completeMFRs.size()-1);
+            				break;
+            				}
+            			//if it has no incoming nodes but the node is a source node, we don't care
+            			if (ego.getValue().size()==0){
+            				continue;
+            				}
+            			
             			for(int target_node:ego.getValue()) {
-            				completeMFRs.get(temp_count).add(network.getConnectingEdgeList(nodeList.get(in_node),nodeList.get(target_node) ,CyEdge.Type.DIRECTED).get(0));
+            				completeMFRs.get(completeMFRs.size()-1).add(network.getConnectingEdgeList(nodeList.get(in_node),nodeList.get(target_node) ,CyEdge.Type.DIRECTED).get(0));
             				
             			}
             			
             			
             		}
-            		temp_count++;
+            		
             	}
             
 
