@@ -59,24 +59,28 @@ public class MinimalFunctionalRouteAlgorithmTask extends AbstractOCSANATask {
         Objects.requireNonNull(taskMonitor, "Task monitor cannot be null");
         taskMonitor.setTitle(String.format("Minimal Functional Routes "));    
         if (contextBundle.getcomputeMFRs()) {
-        String targetType;
-        Set<CyNode> sourceNodes = contextBundle.getSourceNodes();
-        Set<CyNode> targetsForThisRun;
+
         
           
         
-            targetType = "target";
-            targetsForThisRun = contextBundle.getTargetNodes();
 
+            String targetType;
+            Set<CyNode> sourceNodes = contextBundle.getSourceNodes();
+            Set<CyNode> targetsForThisRun;
+            switch (algStep) {
+            case FIND_MFRS:
+                targetType = "target";
+                targetsForThisRun = contextBundle.getTargetNodes();
+                break;
 
-//        case FIND_PATHS_TO_OFF_TARGETS:
-//            targetType = "off-target";
-//            targetsForThisRun = contextBundle.getOffTargetNodes();
-//            break;
-//
-//        default:
-//            throw new IllegalStateException("Invalid algorithm step for path-finding");
-//        }
+            case FIND_MFRS_TO_OFF_TARGETS:
+                targetType = "off-target";
+                targetsForThisRun = contextBundle.getOffTargetNodes();
+                break;
+            default:
+                throw new IllegalStateException("Invalid algorithm step for path-finding");
+
+            }
 
         Objects.requireNonNull(sourceNodes, "Source nodes not set by user");
         Objects.requireNonNull(targetsForThisRun, "Target nodes not set by user");
@@ -90,29 +94,30 @@ public class MinimalFunctionalRouteAlgorithmTask extends AbstractOCSANATask {
 
         		Double runTime = (postTime - preTime) / 1E9;
         		
-        		resultsBundle.setMFRs(MFRs);
-        		resultsBundle.setMFRExecutionSeconds(runTime);
-//        switch (algStep) {
-//        case FIND_PATHS_TO_TARGETS:
-//            resultsBundle.setPathsToTargets(paths);
-//            resultsBundle.setPathsToTargetsExecutionSeconds(runTime);
-//            break;
-//
-//        case FIND_PATHS_TO_OFF_TARGETS:
-//            resultsBundle.setPathsToOffTargets(paths);
+       switch (algStep) {
+        case FIND_MFRS:
+            resultsBundle.setMFRs(MFRs);
+            resultsBundle.setMFRExecutionSeconds(runTime);
+            break;
 
-//            break;
-        	taskMonitor.showMessage(TaskMonitor.Level.INFO, String.format("Found %d Minimal Functional Routes in %fs.", MFRs.size(), runTime));
-//        default:
-//            throw new IllegalStateException("Invalid algorithm step for path-finding");
+        case FIND_MFRS_TO_OFF_TARGETS:
+            resultsBundle.setMFRsToOffTargets(MFRs);
+            resultsBundle.setMFRsToOffTargetsExecutionSeconds(runTime);
+            break;
+        	
+        default:
+            throw new IllegalStateException("Invalid algorithm step for MFR finding  ");
+        }
+       taskMonitor.showMessage(TaskMonitor.Level.INFO, String.format("Found %d Minimal Functional Routes in %fs.", MFRs.size(), runTime));
+       
         }
         else {
         	taskMonitor.setStatusMessage("Minimal Functional Routes were not requested");
         }
         
-
+    }
 //        taskMonitor.showMessage(TaskMonitor.Level.INFO, String.format("Computing MFRs"));
-}    
+    
 
     /**
      * Return the MFRS found by this task (or null if the task has
@@ -137,7 +142,7 @@ public class MinimalFunctionalRouteAlgorithmTask extends AbstractOCSANATask {
     public void cancel () {
         super.cancel();
         contextBundle.getMFRAlgorithm().cancel();
-        resultsBundle.setPathFindingWasCanceled();
+        resultsBundle.setMFRFindingWasCanceled ();
         runnerTask.cancel();
     }
 }

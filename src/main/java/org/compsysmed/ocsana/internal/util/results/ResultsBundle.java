@@ -31,8 +31,9 @@ public class ResultsBundle {
     private Double pathsToOffTargetsExecutionSeconds;
     //MFR data     
     private Collection<List<CyEdge>> MFRs;
+    private Collection<List<CyEdge>> MFRsToOffTargets;
     private Double MFRExecutionSeconds;
-    
+    private Double MFRsToOffTargetsExecutionSeconds;
     
     
 
@@ -73,6 +74,11 @@ public class ResultsBundle {
     public Collection<List<CyEdge>> getMFRs () {
         return MFRs;
     }
+    
+    
+    public Collection<List<CyEdge>> getMFRToOffTargets () {
+        return MFRsToOffTargets;
+    }
 
     public void setPathsToTargets (Collection<List<CyEdge>> pathsToTargets) {
         Objects.requireNonNull(pathsToTargets, "Collection of paths to targets cannot be null");
@@ -84,6 +90,13 @@ public class ResultsBundle {
     		Objects.requireNonNull(MFRs, "Collection of MFRs to targets cannot be null");
         this.MFRs = MFRs;
     }
+    
+    
+    public void setMFRsToOffTargets (Collection<List<CyEdge>> MFRsToOffTargets) {
+
+		Objects.requireNonNull(MFRsToOffTargets, "Collection of MFRs to targets cannot be null");
+    this.MFRsToOffTargets = MFRsToOffTargets;
+}
 
     public Collection<List<CyEdge>> getPathsToOffTargets () {
         return pathsToOffTargets;
@@ -107,6 +120,20 @@ public class ResultsBundle {
         Objects.requireNonNull(MFRExecutionSeconds, "Time to compute MFR to targets cannot be null");
         this.MFRExecutionSeconds = MFRExecutionSeconds;
     }
+    
+    public void setMFRsToOffTargetsExecutionSeconds (Double MFRsToOffTargetsExecutionSeconds) {
+        Objects.requireNonNull(MFRsToOffTargetsExecutionSeconds, "Time to compute MFR to targets cannot be null");
+        this.MFRsToOffTargetsExecutionSeconds = MFRsToOffTargetsExecutionSeconds;
+    }
+    
+    public Double getMFRsToOffTargetsExecutionSeconds () {
+        return MFRsToOffTargetsExecutionSeconds;
+    }
+    
+    public Double getMFRExecutionSeconds () {
+        return MFRExecutionSeconds;
+    }
+    
 
     public Double getPathsToOffTargetsExecutionSeconds () {
         return pathsToOffTargetsExecutionSeconds;

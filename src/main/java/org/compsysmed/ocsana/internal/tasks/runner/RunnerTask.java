@@ -113,6 +113,19 @@ public class RunnerTask
         taskManager.execute(pathsToOffTargetsTaskFactory.createTaskIterator(), this);
     }
 
+    
+    
+    private void spawnMFRsToOffTargetsTask () {
+		MinimalFunctionalRouteAlgorithmTaskFactory mfrToOffTargetTaskFactory =
+				new MinimalFunctionalRouteAlgorithmTaskFactory(this, contextBundle, resultsBundle, OCSANAStep.FIND_MFRS_TO_OFF_TARGETS);
+
+
+		taskManager.execute(mfrToOffTargetTaskFactory.createTaskIterator(), this);
+    }
+    
+    
+    
+    
     private void spawnOCSANAScoringTask () {
         OCSANAScoringTaskFactory scoringTaskFactory =
             new OCSANAScoringTaskFactory(this, contextBundle, resultsBundle);
@@ -210,8 +223,15 @@ public class RunnerTask
             break;
         
         case FIND_MFRS:
-        	spawnOCSANAScoringTask();
+        	spawnMFRsToOffTargetsTask ();
             break;
+            
+        case FIND_MFRS_TO_OFF_TARGETS:
+        	spawnOCSANAScoringTask();
+            break;    
+            
+            
+            
         
         case SCORE_PATHS:
         		spawnMHSTask();
