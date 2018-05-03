@@ -102,7 +102,7 @@ public class MinimalFunctionalRouteAlgorithmTask extends AbstractOCSANATask {
 //            resultsBundle.setPathsToOffTargets(paths);
 
 //            break;
-//
+        	taskMonitor.showMessage(TaskMonitor.Level.INFO, String.format("Found %d Minimal Functional Routes in %fs.", MFRs.size(), runTime));
 //        default:
 //            throw new IllegalStateException("Invalid algorithm step for path-finding");
         }

@@ -14,17 +14,17 @@ package org.compsysmed.ocsana.internal.algorithms.scoring;
 // Java imports
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+//import java.util.stream.Collectors;
+//import java.util.stream.Stream;
 
 // Cytoscape imports
-import org.cytoscape.work.Tunable;
+//import org.cytoscape.work.Tunable;
 
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNode;
 
-import org.cytoscape.model.CyTable;
+
 import org.cytoscape.model.CyRow;
 
 // OCSANA imports
@@ -112,27 +112,10 @@ public class OCSANAScoringAlgorithm
     			compositeNodes.add(node);
     		}
     		
+    		TargetPathCountMapExtender(NodesInMFRsUnaccountedFor,targetPathCountMap, targets,MinimalFunctionalRoutes);
+    		
             for (CyNode node:NodesInMFRsUnaccountedFor) {
-            	targetPathCountMap.put(node,new HashMap<>());
-            
-            	
-            	
-            	//CAREFUL. Right now this is single target for targetPathCount
-            	for (CyNode target:targets) {
-        			
-            	int count =0;
-    			
-            	
-            	//TO DO ADD Hashmap that counts the amount of times a  given node participates in an mfr
-            	for (List<CyEdge>mfrs:MinimalFunctionalRoutes) {
 
-    					count++;
-
-    				
-    			}
-    			targetPathCountMap.get(node).put(target,count);
-            	}
-    			
     			
     			
             	Set<CyNode> composites=new HashSet<>(compositeNodes);
@@ -297,23 +280,70 @@ public class OCSANAScoringAlgorithm
             
             }
         }
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
     	return nodes;
     	
     }
+    	
+        private Set<CyNode> getNodes(List<CyEdge> collection){
+        	Set<CyNode> nodes=new HashSet<>();
+        	for (CyEdge edge: collection) {
+                Objects.requireNonNull(edge, "Cannot score a null path");
+                    if (!edge.isDirected()) {
+                        throw new IllegalArgumentException("Undirected edges are not supported.");
+                    }
+                nodes.add(edge.getSource());
+                nodes.add(edge.getTarget());
+                    
+                
+                }
+        	return nodes;
+            }
+    	
+    	
+    	
+
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+
+	
     
+    
+    
+    
+    
+    private Map<CyNode,Map<CyNode,Integer>> TargetPathCountMapExtender(List<CyNode> unaccountedNodes,Map<CyNode,Map<CyNode,Integer>> targetPathCount, Collection<CyNode> targets,Collection<List<CyEdge>>MinimalFunctionalRoutes){
+		for (CyNode node : unaccountedNodes) {
+			targetPathCount.put(node,new HashMap<>());
+			for (CyNode target:targets) {
+				targetPathCount.get(node).put(target, 0);
+			}
+			
+			for (List<CyEdge>mfr:MinimalFunctionalRoutes) {
+				Set<CyNode> setOfNodesInMfrs=getNodes(mfr);
+				for (CyNode target:targets) {
+					if (setOfNodesInMfrs.contains(target) && setOfNodesInMfrs.contains(target) ) {
+						targetPathCount.get(node).put(target,targetPathCount.get(node).get(target)+1);
+					}
+					
+				}
+			}
+			
+		}
+		
+		
+		
+		return targetPathCount;
+	}
     private Collection<CyNode> SetComplement(Collection<List<CyEdge>>set1,Collection<List<CyEdge>>set2){
     	Collection<CyNode>Set1=getNodes(set1);
     	Collection<CyNode>Set2=getNodes(set2);

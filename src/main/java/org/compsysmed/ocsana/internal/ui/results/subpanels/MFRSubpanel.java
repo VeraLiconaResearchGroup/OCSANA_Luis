@@ -27,11 +27,11 @@ public MFRSubpanel (ContextBundle contextBundle,
                    ResultsBundle resultsBundle,
                    PathType pathType) {
     Collection<List<CyEdge>> MFRs;
-   
+   Double MFRfindingtime;
 
 
         MFRs = resultsBundle.getMFRs();
-
+        MFRfindingtime=resultsBundle.getMHSExecutionSeconds();
 
         
 
@@ -52,7 +52,7 @@ public MFRSubpanel (ContextBundle contextBundle,
         JScrollPane pathScrollPane = new JScrollPane(pathTextArea);
 
         setLayout(new BorderLayout());
-        String panelText = String.format("Found Minimal Functional Routes");
+        String panelText = String.format("Found %d MFRs to %s in %fs.", MFRs.size(),  MFRfindingtime);
         add(new JLabel(panelText), BorderLayout.PAGE_START);
         add(pathScrollPane, BorderLayout.CENTER);
     }

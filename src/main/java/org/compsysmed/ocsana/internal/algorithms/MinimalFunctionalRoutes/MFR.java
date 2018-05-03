@@ -356,8 +356,19 @@ public class MFR extends AbstractMFRalgorithm {
 
 	@Override
 	public String description() {
-		// TODO Auto-generated meth
-		return null;
-	}
+        StringBuilder result = new StringBuilder(fullName());
+
+        result.append(" (");
+
+//        if (dijkstra.restrictPathLength) {
+//            result.append(String.format("max path length: %d", dijkstra.maxPathLength));
+//        } else {
+//            result.append("no max path length");
+//        }
+
+
+        result.append(")");
+        return result.toString();
+   }
 
 }
