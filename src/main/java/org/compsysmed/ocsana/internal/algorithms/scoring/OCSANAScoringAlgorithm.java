@@ -64,6 +64,8 @@ public class OCSANAScoringAlgorithm
             listener.receiveScores(scores);
         }
     }
+    
+    
 
     /**
      * Apply the OCSANA scoring algorithm
@@ -75,7 +77,7 @@ public class OCSANAScoringAlgorithm
      **/
     public OCSANAScores computeScores (Collection<List<CyEdge>> pathsToTargets,
                                        Collection<List<CyEdge>> pathsToOffTargets,
-                                       Function<CyEdge, Boolean> edgeIsInhibition) {
+                                       Function<CyEdge, Boolean> edgeIsInhibition,Collection<List<CyEdge>> MinimalFunctionalRoutes,Collection<CyNode> targets, Collection<CyNode> offtargets) {
         Objects.requireNonNull(pathsToTargets, "Collection of paths to targets cannot be null");
         Objects.requireNonNull(pathsToOffTargets, "Collection of paths to off-targets cannot be null");
 
@@ -83,19 +85,112 @@ public class OCSANAScoringAlgorithm
         Map<CyNode, Set<CyNode>> targetsHit = new HashMap<>();
         Map<CyNode, Map<CyNode, Integer>> targetPathCountMap = new HashMap<>();
         scoreNodesInPaths(pathsToTargets, edgeIsInhibition, effectsOnTargets, targetsHit, targetPathCountMap);
+        
 
         Map<CyNode, Map<CyNode, Double>> effectsOnOffTargets = new HashMap<>();
         Map<CyNode, Set<CyNode>> offTargetsHit = new HashMap<>();
         Map<CyNode, Map<CyNode, Integer>> offTargetPathCountMap = new HashMap<>();
         scoreNodesInPaths(pathsToOffTargets, (edge -> false), effectsOnOffTargets, offTargetsHit, offTargetPathCountMap);
+        
+        
+        //This part is added for computing OCSANA scores for nodes in MFRs that do not appear in elementary paths
+        if (MinimalFunctionalRoutes !=null) {
+        	Collection<CyNode> in_paths= getNodes(pathsToTargets);
+            List<CyNode> NodesInMFRsUnaccountedFor= new ArrayList<>(SetComplement(MinimalFunctionalRoutes,pathsToTargets));
+    		final String IDcolumnName = network.getDefaultNodeTable().getPrimaryKey().getName();
+    		List<CyNode> compositeNodes=new ArrayList<>();
+    		Objects.requireNonNull(network.getDefaultNodeTable().getColumn("composite"), "There is no column with name composite");
+    		final Collection<CyRow> compositeRows = network.getDefaultNodeTable().getMatchingRows("composite", true);
+    		for (final CyRow row : compositeRows) {
+    			final Long nodeID = row.get(IDcolumnName, Long.class);
+    		
+    			if (nodeID == null)
+    				continue;
+    			final CyNode node = network.getNode(nodeID);
+    			if (node==null)
+    			continue;
+    			compositeNodes.add(node);
+    		}
+    		
+            for (CyNode node:NodesInMFRsUnaccountedFor) {
+            	targetPathCountMap.put(node,new HashMap<>());
+            
+            	
+            	
+            	//CAREFUL. Right now this is single target for targetPathCount
+            	for (CyNode target:targets) {
+        			
+            	int count =0;
+    			
+            	
+            	//TO DO ADD Hashmap that counts the amount of times a  given node participates in an mfr
+            	for (List<CyEdge>mfrs:MinimalFunctionalRoutes) {
 
+    					count++;
+
+    				
+    			}
+    			targetPathCountMap.get(node).put(target,count);
+            	}
+    			
+    			
+    			
+            	Set<CyNode> composites=new HashSet<>(compositeNodes);
+            		effectsOnTargets.put(node,new HashMap<>());
+            		targetsHit.put(node,new HashSet<>());
+            		
+            		effectsOnOffTargets.put(node,new HashMap<>());
+            		offTargetsHit.put(node,new HashSet<>());
+            		offTargetPathCountMap.put(node,new HashMap<>());
+            		Set<CyNode> outgoing = new HashSet<>(network.getNeighborList(node, CyEdge.Type.OUTGOING));
+            		composites.retainAll(in_paths);
+            		outgoing.retainAll(composites);
+            		//effectsOnTargets will just get the maximum of composite nodes adjacent to the node
+            		for(CyNode valid:outgoing) {
+            			for (CyNode key:effectsOnTargets.get(valid).keySet()) {
+            				if (effectsOnTargets.get(node).containsKey(key))
+            				{
+            					if (effectsOnTargets.get(node).get(key)<effectsOnTargets.get(valid).get(key))
+            					{ double temp =effectsOnTargets.get(valid).get(key);
+            						effectsOnTargets.get(node).put(key, temp);
+	
+            					}
+            					
+            				}
+            				else {
+            					double temp = effectsOnTargets.get(valid).get(key);
+            					effectsOnTargets.get(node).put(key,temp);
+            				}
+            			}
+            			for(CyNode hit: targetsHit.get(valid))
+            			{
+            				targetsHit.get(node).add(hit);
+            				
+            			}
+            			
+
+
+            			
+            		}
+            }
+            }
+        
+        
+        
+        
+        
+        
+        
         if (isCanceled()) {
             return null;
         } else {
             OCSANAScores result = new OCSANAScores(network, effectsOnTargets, targetsHit, targetPathCountMap, effectsOnOffTargets, offTargetsHit, offTargetPathCountMap);
             notifyListeners(result);
+
             return result;
         }
+        
+    
     }
 
     /**
@@ -119,7 +214,7 @@ public class OCSANAScoringAlgorithm
         Objects.requireNonNull(scoreMap, "Score map cannot be null");
         Objects.requireNonNull(targetsHit, "Targets hit map cannot be null");
         Objects.requireNonNull(pathCountMap, "Path count map cannot be null");
-
+        
         // Iterate over the paths
         for (List<CyEdge> path: paths) {
             // Handle cancellation
@@ -178,8 +273,54 @@ public class OCSANAScoringAlgorithm
                 pathCountMap.get(edgeSource).put(pathTarget, count);
             }
         }
+        
     }
 
+    private Collection<CyNode> getNodes(Collection<List<CyEdge>>collections){
+    	Set<CyNode> nodes=new HashSet<>();
+    	for (List<CyEdge> edges: collections) {
+            // Handle cancellation
+
+            // Handle empty and null paths
+            Objects.requireNonNull(edges, "Cannot score a null path");
+            if (edges.isEmpty()) {
+                continue;
+            }
+
+            for (CyEdge edge:edges) {
+                if (!edge.isDirected()) {
+                    throw new IllegalArgumentException("Undirected edges are not supported.");
+                }
+            nodes.add(edge.getSource());
+            nodes.add(edge.getTarget());
+                
+            
+            }
+        }
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	return nodes;
+    	
+    }
+    
+    private Collection<CyNode> SetComplement(Collection<List<CyEdge>>set1,Collection<List<CyEdge>>set2){
+    	Collection<CyNode>Set1=getNodes(set1);
+    	Collection<CyNode>Set2=getNodes(set2);
+    Set1.removeAll(Set2);
+    return Set1;
+    }
+    
     // Name methods
     @Override
     public String fullName () {

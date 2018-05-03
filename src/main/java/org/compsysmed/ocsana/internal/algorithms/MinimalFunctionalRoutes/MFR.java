@@ -53,7 +53,7 @@ public class MFR extends AbstractMFRalgorithm {
 				mfs = computeMFRs(sourceNode, targetNode, sources);
 				//Avoiding duplicates
 				for (List<CyEdge>mfr:mfs) {
-					if (SetOfMfrs.contains(mfr)){continue;}
+					if (SetOfMfrs.contains(new HashSet(mfr))){continue;}
 					else {
 					SetOfMfrs.add(new HashSet(mfr));
 					ComputedMinimalFunctionalRoutes.add(mfr);}

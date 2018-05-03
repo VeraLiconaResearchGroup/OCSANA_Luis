@@ -133,7 +133,7 @@ public class PathFindingAlgorithmTask extends AbstractOCSANATask {
     public void cancel () {
         super.cancel();
         contextBundle.getPathFindingAlgorithm().cancel();
-        resultsBundle.setMFRFindingWasCanceled();
+        resultsBundle.setPathFindingWasCanceled();
         runnerTask.cancel();
     }
 }

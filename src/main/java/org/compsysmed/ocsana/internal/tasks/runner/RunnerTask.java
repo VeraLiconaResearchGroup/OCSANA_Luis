@@ -205,16 +205,19 @@ public class RunnerTask
             break;
 
         case FIND_PATHS_TO_OFF_TARGETS:
-            spawnOCSANAScoringTask();
-            break;
-
-        case SCORE_PATHS:
         		spawnMFRTask();
+        		
+            break;
+        
+        case FIND_MFRS:
+        	spawnOCSANAScoringTask();
+            break;
+        
+        case SCORE_PATHS:
+        		spawnMHSTask();
             break;
 
-        case FIND_MFRS:
-        	spawnMHSTask();
-            break;
+
             
         case FIND_MHSES:
         		spawnMHSOFMFRs();

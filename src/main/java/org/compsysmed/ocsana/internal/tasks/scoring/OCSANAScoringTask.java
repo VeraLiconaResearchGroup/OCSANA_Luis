@@ -67,7 +67,7 @@ public class OCSANAScoringTask
         taskMonitor.setStatusMessage("Computing OCSANA scores.");
 
         Long OCSANAPreTime = System.nanoTime();
-        OCSANAScores ocsanaScores = contextBundle.getOCSANAAlgorithm().computeScores(resultsBundle.getPathsToTargets(), resultsBundle.getPathsToOffTargets(), contextBundle.getEdgeProcessor()::edgeIsInhibition);
+        OCSANAScores ocsanaScores = contextBundle.getOCSANAAlgorithm().computeScores(resultsBundle.getPathsToTargets(), resultsBundle.getPathsToOffTargets(), contextBundle.getEdgeProcessor()::edgeIsInhibition,resultsBundle.getMFRs(),contextBundle.getTargetNodes(),contextBundle.getOffTargetNodes());
         resultsBundle.setOCSANAScores(ocsanaScores);
         Long OCSANAPostTime = System.nanoTime();
 

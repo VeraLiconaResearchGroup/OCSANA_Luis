@@ -15,13 +15,15 @@ package org.compsysmed.ocsana.internal.util.results;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.cytoscape.model.CyEdge;
 // Cytoscape imports
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyRow;
 import org.cytoscape.work.TaskMonitor;
-
+import org.compsysmed.ocsana.internal.util.context.ContextBundle;
 // OCSANA imports
-
+import org.compsysmed.ocsana.internal.util.context.ContextBundle;
 /**
  * Data structure to hold and work with OCSANA scores
  **/
@@ -38,7 +40,7 @@ public class OCSANAScores {
     private final Map<CyNode, Map<CyNode, Double>> effectsOnOffTargets;
     private final Map<CyNode, Set<CyNode>> offTargetsHitMap;
     private final Map<CyNode, Map<CyNode, Integer>> offTargetPathCountMap;
-
+    
     public OCSANAScores (CyNetwork network,
                          Map<CyNode, Map<CyNode, Double>> effectsOnTargets,
                          Map<CyNode, Set<CyNode>> targetsHitMap,
@@ -193,9 +195,21 @@ public class OCSANAScores {
         Objects.requireNonNull(elementaryNode, "Elementary node cannot be null");
         Objects.requireNonNull(targets, "Set of target nodes cannot be null");
         Objects.requireNonNull(offTargets, "Set of off-target nodes cannot be null");
-        Integer setScore = targetPathCountMap.get(elementaryNode).entrySet().stream().filter(entry -> targets.contains(entry.getKey())).mapToInt(entry -> entry.getValue()).sum();
+
         
-        return OVERALL(elementaryNode, targets, offTargets) * setScore;
+        
+
+        int setScore = targetPathCountMap.get(elementaryNode).entrySet().stream().filter(entry -> targets.contains(entry.getKey())).mapToInt(entry -> entry.getValue()).sum();
+
+        	
+    			
+    			
+    		
+    		
+        
+        
+        
+		return OVERALL(elementaryNode, targets, offTargets) * setScore;
     }
 
     /**
@@ -207,7 +221,9 @@ public class OCSANAScores {
         Objects.requireNonNull(elementaryNodes, "Set of elementary nodes cannot be null");
         Objects.requireNonNull(targets, "Set of target nodes cannot be null");
         Objects.requireNonNull(offTargets, "Set of off-target nodes cannot be null");
-        return elementaryNodes.stream().mapToDouble(node -> OCSANA(node, targets, offTargets)).sum();
+        
+
+return elementaryNodes.stream().mapToDouble(node -> OCSANA(node, targets, offTargets)).sum();
     }
 
     /**

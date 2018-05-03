@@ -98,7 +98,7 @@ public class OCSANAScoringAlgorithmTest {
         };
 
         // Compute scores
-        OCSANAScores scores = scoringAlg.computeScores(pathsToTargets, pathsToOffTargets, inhibitionEdgeTester);
+        OCSANAScores scores = scoringAlg.computeScores(pathsToTargets, pathsToOffTargets, inhibitionEdgeTester,null,null,null);
 
         // Tests
         assertEquals("Toy network score: A", 0.0d, scores.OCSANA(A), 0.0d);
