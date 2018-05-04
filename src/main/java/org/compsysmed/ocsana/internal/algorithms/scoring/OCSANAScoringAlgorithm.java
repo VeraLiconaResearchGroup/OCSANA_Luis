@@ -77,7 +77,7 @@ public class OCSANAScoringAlgorithm
      **/
     public OCSANAScores computeScores (Collection<List<CyEdge>> pathsToTargets,
                                        Collection<List<CyEdge>> pathsToOffTargets,
-                                       Function<CyEdge, Boolean> edgeIsInhibition,Collection<List<CyEdge>> MinimalFunctionalRoutes,Collection<CyNode> targets, Collection<CyNode> offtargets) {
+                                       Function<CyEdge, Boolean> edgeIsInhibition,Collection<List<CyEdge>> MinimalFunctionalRoutes,Collection<List<CyEdge>> MinimalFunctionalRoutesToOffTargets,Collection<CyNode> targets, Collection<CyNode> offtargets) {
         Objects.requireNonNull(pathsToTargets, "Collection of paths to targets cannot be null");
         Objects.requireNonNull(pathsToOffTargets, "Collection of paths to off-targets cannot be null");
 
@@ -96,6 +96,7 @@ public class OCSANAScoringAlgorithm
         //This part is added for computing OCSANA scores for nodes in MFRs that do not appear in elementary paths
         if (MinimalFunctionalRoutes !=null) {
         	Collection<CyNode> in_paths= getNodes(pathsToTargets);
+        	Collection<CyNode> in_off_paths= getNodes(pathsToOffTargets);
             List<CyNode> NodesInMFRsUnaccountedFor= new ArrayList<>(SetComplement(MinimalFunctionalRoutes,pathsToTargets));
     		final String IDcolumnName = network.getDefaultNodeTable().getPrimaryKey().getName();
     		List<CyNode> compositeNodes=new ArrayList<>();
@@ -113,22 +114,44 @@ public class OCSANAScoringAlgorithm
     		}
     		
     		TargetPathCountMapExtender(NodesInMFRsUnaccountedFor,targetPathCountMap, targets,MinimalFunctionalRoutes);
-    		
+    		TargetPathCountMapExtender(NodesInMFRsUnaccountedFor,offTargetPathCountMap, offtargets,MinimalFunctionalRoutesToOffTargets);
             for (CyNode node:NodesInMFRsUnaccountedFor) {
 
     			
-    			
-            	Set<CyNode> composites=new HashSet<>(compositeNodes);
+    				//Copy for target_nodes
+            		Set<CyNode> composites=new HashSet<>(compositeNodes);
+            		//Copy for off-target nodes
+            		Set<CyNode> composites_copy=new HashSet<>(compositeNodes);
             		effectsOnTargets.put(node,new HashMap<>());
             		targetsHit.put(node,new HashSet<>());
             		
             		effectsOnOffTargets.put(node,new HashMap<>());
             		offTargetsHit.put(node,new HashSet<>());
-            		offTargetPathCountMap.put(node,new HashMap<>());
+            		
+            		//Copy for target_nodes
             		Set<CyNode> outgoing = new HashSet<>(network.getNeighborList(node, CyEdge.Type.OUTGOING));
+            		
+            		//Copy for off_target_nodes
+            		Set<CyNode> outgoing_off = new HashSet<>(network.getNeighborList(node, CyEdge.Type.OUTGOING));
+            		//Only keep composite nodes that are in_paths
             		composites.retainAll(in_paths);
+            		//Only keep outgoing nodes that are composite AND in paths.
             		outgoing.retainAll(composites);
-            		//effectsOnTargets will just get the maximum of composite nodes adjacent to the node
+            		
+            		//Only keep composite nodes that are in_off_paths
+            		composites_copy.retainAll(in_off_paths);
+            		//Only keep outgoing nodes that are composite AND in off_paths.
+            		outgoing_off.retainAll(composites_copy);
+            		
+            		
+            		
+            		
+            		
+            		//effectsOnTargets (if it fails) will just get the maximum of effectsOnTargets of composite nodes adjacent to the node
+            		//effectsOnOffTargets (if it fails) will just get the maximum of effectsOnOffTargets of composite nodes adjacent to the node
+            		
+            		
+            		//For targets.
             		for(CyNode valid:outgoing) {
             			for (CyNode key:effectsOnTargets.get(valid).keySet()) {
             				if (effectsOnTargets.get(node).containsKey(key))
@@ -155,6 +178,54 @@ public class OCSANAScoringAlgorithm
 
             			
             		}
+            		//For Off-targets:
+            		
+            		for(CyNode valid:outgoing_off) {
+            			for (CyNode key:effectsOnOffTargets.get(valid).keySet()) {
+            				if (effectsOnOffTargets.get(node).containsKey(key))
+            				{
+            					if (effectsOnOffTargets.get(node).get(key)<effectsOnOffTargets.get(valid).get(key))
+            					{ double temp =effectsOnTargets.get(valid).get(key);
+            						effectsOnOffTargets.get(node).put(key, temp);
+	
+            					}
+            					
+            				}
+            				else {
+            					double temp = effectsOnOffTargets.get(valid).get(key);
+            					effectsOnOffTargets.get(node).put(key,temp);
+            				}
+            			}
+            			for(CyNode hit: offTargetsHit.get(valid))
+            			{
+            				offTargetsHit.get(node).add(hit);
+            				
+            			}
+            			
+
+
+            			
+            		}
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
+            		
             }
             }
         
