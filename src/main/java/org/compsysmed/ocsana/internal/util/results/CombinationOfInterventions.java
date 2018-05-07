@@ -147,12 +147,12 @@ public class CombinationOfInterventions {
     /**
      * Get a string representation of a collection of nodes
      *
-     * The current format is "[node1, node2, node3]".
+     * The current format is "[node1 node2 node3]".
      *
      * @param nodes  the Collection of nodes
      **/
     public String nodeSetString(Collection<CyNode> nodes) {
-        return nodes.stream().map(node -> nodeName(node)).collect(Collectors.joining(", ", "[", "]"));
+        return nodes.stream().map(node -> nodeName(node)).collect(Collectors.joining(" ", "[", "]"));
     }
 
 }

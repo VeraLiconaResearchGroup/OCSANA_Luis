@@ -55,9 +55,11 @@ Paths to off-target nodes:
 No paths to off-target nodes found.
 {% endif %}
 
+
+
 Scoring algorithm: {{contextBundle.getOCSANAAlgorithm().description()}}
 
-Computed OCSANA scores in {{resultsBundle.getOCSANAScoringExecutionSeconds()}}s.
+Computed OCSANA scores for elementary nodes in {{resultsBundle.getOCSANAScoringExecutionSeconds()}}s.
 
 Elementary node{% for target in contextBundle.getTargetNodes() %}       {{contextBundle.getNodeName(target)}}{% endfor %}
 
@@ -71,7 +73,7 @@ MHS algorithm: {{contextBundle.getMHSAlgorithm().description()}}
 
 Found {{resultsBundle.getCIs().size()}} CIs in {{resultsBundle.getMHSExecutionSeconds()}}s.
 
-Scoring data for all CIs:
+Scoring data for all CIs using paths as signaling object:
 Cut set	Size	OCSANA score	Target score	Side-effect score
 {% for ci in resultsBundle.getCIs() %}
 {{ci.interventionNodesString()}}	{{ci.size()}}	{{resultsBundle.getOCSANAScores().OCSANA(ci.getNodes())}}	{{resultsBundle.getOCSANAScores().EFFECT_ON_TARGETS(ci.getNodes())}}	{{resultsBundle.getOCSANAScores().SIDE_EFFECTS(ci.getNodes())}}
@@ -80,6 +82,55 @@ Cut set	Size	OCSANA score	Target score	Side-effect score
 {% else %}
 CI generation canceled.
 {% endif %}
+
+{% if contextBundle.getcomputeMFRs() %}
+Minimal Functional Route finding algorithm: {{contextBundle.getMFRAlgorithm().description()}}
+Search times: {{resultsBundle.getMFRExecutionSeconds()}}s. for targets, {{resultsBundle.getMFRsToOffTargetsExecutionSeconds()}}s. for off-targets.
+
+
+{% if resultsBundle.getMFRs() is not empty %}
+Minimal Functional Routes to target nodes:
+Found  {{resultsBundle.getMFRs.size()}} minimal functional routes to targets.
+{% for mfr in resultsBundle.getMFRs() %}
+{{contextBundle.MFRString(mfr)}}
+
+{% endfor %}
+{% else %}
+No Minimal Functional Routes to target nodes found.
+{% endif %}
+
+
+{% if resultsBundle.getMFRToOffTargets() is not empty %}
+Minimal Functional Routes to off-target nodes: 
+Found  {{resultsBundle.getMFRToOffTargets().size()}} minimal functional routes to off-targets.
+{% for mfr in resultsBundle.getMFRToOffTargets() %}
+{{contextBundle.MFRString(mfr)}}
+
+{% endfor %}
+
+
+
+
+{% else %}
+No Minimal Functional Routes to off-target nodes found.
+{% endif %}
+
+{% if not resultsBundle.MHSOFMFRSFindingWasCanceled() %}
+
+Found {{resultsBundle.getMHSOFMFRS().size()}} CIs in {{resultsBundle.getMHSOFMFRSExecutionSeconds()}}s.
+
+
+Scoring data for all CIs using paths as signaling object:
+Cut set	Size	OCSANA score	Target score	Side-effect score
+{% for ci in resultsBundle.getMHSOFMFRS() %}
+{{ci.interventionNodesString()}}	{{ci.size()}}	{{resultsBundle.getOCSANAScores().OCSANA(ci.getNodes())}}	{{resultsBundle.getOCSANAScores().EFFECT_ON_TARGETS(ci.getNodes())}}	{{resultsBundle.getOCSANAScores().SIDE_EFFECTS(ci.getNodes())}}
+
+{% endfor %}
+{% endif %}
+{% endif %}
+
+
+
 
 Prioritization configuration
 

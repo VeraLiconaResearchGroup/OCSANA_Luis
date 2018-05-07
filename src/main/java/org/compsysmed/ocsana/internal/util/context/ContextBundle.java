@@ -350,10 +350,10 @@ public final class ContextBundle {
 //        } catch (NoSuchElementException e) {
 //            return result.toString();
 //        }
-
-
+		result.append("MFR: ");
         for (CyEdge edge: MFR) {
         		result.append(getNodeName(edge.getTarget()));
+        		
         		if (edgeProcessor.edgeIsInhibition(edge)) {
                 result.append(" |- ");
             } else {
@@ -362,6 +362,7 @@ public final class ContextBundle {
             result.append(getNodeName(edge.getSource()));
             result.append("  ");            
         }
+
         
 
         return result.toString();
