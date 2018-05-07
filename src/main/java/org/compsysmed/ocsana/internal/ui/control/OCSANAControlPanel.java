@@ -75,6 +75,7 @@ public class OCSANAControlPanel
     private NetworkConfigurationSubpanel networkConfigSubpanel;
     private PathFindingSubpanel pathFindingSubpanel;
     private MHSSubpanel mhsSubpanel;
+    private MinimalFunctionalRouteSubpanel mfrSubpanel;
     private TargetActivationSubpanel targetSubpanel;
     private PrioritizationAlgorithmsSubpanel prioritizationAlgorithmsSubpanel;
 
@@ -187,6 +188,10 @@ public class OCSANAControlPanel
         pathFindingSubpanel = new PathFindingSubpanel(this, contextBundleBuilder, panelTaskManager);
         panel.add(pathFindingSubpanel);
         subpanels.add(pathFindingSubpanel);
+        
+        mfrSubpanel = new MinimalFunctionalRouteSubpanel(this, contextBundleBuilder, panelTaskManager);
+        panel.add(mfrSubpanel);
+        subpanels.add(mfrSubpanel);
 
         mhsSubpanel = new MHSSubpanel(this, contextBundleBuilder, panelTaskManager);
         panel.add(mhsSubpanel);

@@ -29,7 +29,7 @@ public class DijkstraPathDecoratorAlgorithm
     extends AbstractOCSANAAlgorithm {
     @Tunable(description = "Bound path length",
              gravity=210)
-    public Boolean restrictPathLength = true;
+	public Boolean restrictPathLength = true;
 
     // TODO: require non-negative
     @Tunable(description = "Maximum path length",
@@ -67,7 +67,7 @@ public class DijkstraPathDecoratorAlgorithm
      * that number is not greater than maxPathLength
      **/
     
-    //Just changed this from protected to public. 
+
     protected Map<CyEdge, Integer> edgeMinDistancesBackwards (Set<CyNode> targets) {
         return edgeMinDistances(targets, CyEdge.Type.INCOMING);
     }

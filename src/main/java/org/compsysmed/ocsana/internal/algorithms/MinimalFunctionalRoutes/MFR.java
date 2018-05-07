@@ -25,10 +25,26 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.cytoscape.model.CyTable;
+import org.cytoscape.work.Tunable;
 import org.cytoscape.model.CyRow;
 public class MFR extends AbstractMFRalgorithm {
-	private static final String NAME = "Compute minimal functional routes from source nodes to target nodes t";
-	private static final String SHORTNAME = "Single MFRs";
+	private static final String NAME = "Algorithm 3 in DOI: 10.1111/itor.12007";
+	private static final String SHORTNAME = "Algorithm 3";
+    @Tunable(description = "Bound Minimal Functional Route size",
+            gravity=260
+            )
+	public Boolean restrictMFRsize = true;
+
+
+   @Tunable(description = "Maximum MFR size",
+            tooltip = "Maximum number of edges to allow in an MFR",
+            gravity = 261,
+            dependsOn = "restrictMFRsize=true")
+   public Integer maxMFRsize = 20;
+
+	
+	
+	
 	int curr_mfr_index;//pointer
 	int mfr_count;
 	boolean is_mfr_complete; // aka flag

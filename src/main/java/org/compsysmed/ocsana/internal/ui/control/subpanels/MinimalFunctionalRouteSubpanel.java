@@ -1,5 +1,5 @@
 /**
- * Subpanel configuring path-finding algorithm in OCSANA
+ * Subpanel configuring Minimal Functional Route algorithm in OCSANA
  *
  * Copyright Vera-Licona Research Group (C) 2016
  *
@@ -26,7 +26,11 @@ import javax.swing.JPanel;
 import org.cytoscape.work.swing.PanelTaskManager;
 
 // OCSANA imports
-import org.compsysmed.ocsana.internal.algorithms.path.*;
+import org.compsysmed.ocsana.internal.algorithms.MinimalFunctionalRoutes.*;
+
+
+
+
 
 import org.compsysmed.ocsana.internal.ui.control.OCSANAControlPanel;
 
@@ -35,7 +39,7 @@ import org.compsysmed.ocsana.internal.util.context.ContextBundleBuilder;
 /**
  * Subpanel for user configuration of path-finding algorithm
  **/
-public class PathFindingSubpanel
+public class MinimalFunctionalRouteSubpanel
     extends AbstractControlSubpanel
     implements ActionListener {
     private ContextBundleBuilder contextBundleBuilder;
@@ -43,7 +47,9 @@ public class PathFindingSubpanel
 
     // UI elements
     private JPanel algSelectionPanel;
-    private JComboBox<AbstractPathFindingAlgorithm> algorithmSelecter;
+    private JComboBox<AbstractMFRalgorithm> algorithmSelecter;
+    private JCheckBox computeMFRs;
+    private JCheckBox includeCompositeNodes;
     private JPanel tunablePanel;
 
     /**
@@ -52,7 +58,7 @@ public class PathFindingSubpanel
      * @param contextBundleBuilder  the context bundle builder
      * @param taskManager  a PanelTaskManager to provide @Tunable panels
      **/
-    public PathFindingSubpanel (OCSANAControlPanel controlPanel,
+    public MinimalFunctionalRouteSubpanel (OCSANAControlPanel controlPanel,
                                 ContextBundleBuilder contextBundleBuilder,
                                 PanelTaskManager taskManager) {
         super(controlPanel);
@@ -63,8 +69,24 @@ public class PathFindingSubpanel
 
         setStandardLayout(this);
 
-        add(makeHeader("Configure path-finding"));
+        add(makeHeader("Configure Minimal Functional Routes"));
+        // Algorithm configuration panel
+        tunablePanel = new JPanel();
+        setStandardLayout(tunablePanel);
+        
 
+        
+        
+        
+        // Compute MFRs?
+        computeMFRs = new JCheckBox("Compute MFRs", contextBundleBuilder.getMFRs());
+        add(computeMFRs);
+        
+        includeCompositeNodes = new JCheckBox("Include Composite Nodes in MHS of MFRs", contextBundleBuilder.getIncludecomposite());
+        add(includeCompositeNodes);
+        
+        
+        add(tunablePanel);
         // Algorithm selecter
         algSelectionPanel = new JPanel();
         setStandardLayout(algSelectionPanel);
@@ -72,36 +94,32 @@ public class PathFindingSubpanel
 
         algSelectionPanel.add(new JLabel("Algorithm:"));
 
-        List<AbstractPathFindingAlgorithm> algorithms = new ArrayList<>();
-        algorithms.add(new AllNonSelfIntersectingPathsAlgorithm(contextBundleBuilder.getNetwork()));
-        algorithms.add(new ShortestPathsAlgorithm(contextBundleBuilder.getNetwork()));
+        List<AbstractMFRalgorithm> algorithms = new ArrayList<>();
+        algorithms.add(new MFR(contextBundleBuilder.getNetwork()));
 
-        algorithmSelecter = new JComboBox<>(algorithms.toArray(new AbstractPathFindingAlgorithm[algorithms.size()]));
+        algorithmSelecter = new JComboBox<>(algorithms.toArray(new AbstractMFRalgorithm[algorithms.size()]));
         algSelectionPanel.add(algorithmSelecter);
         algorithmSelecter.addActionListener(this);
 
-        // Algorithm configuration panel
-        tunablePanel = new JPanel();
-        setStandardLayout(tunablePanel);
-        add(tunablePanel);
 
-        
-        
-        
         updateTunablePanel();
     }
 
     private void updateTunablePanel () {
         tunablePanel.removeAll();
+        JPanel content = taskManager.getConfiguration(null, getAlgorithm());
+        if (content != null) {
+            tunablePanel.add(content);
+        }
 
-        tunablePanel.add(taskManager.getConfiguration(null, getAlgorithm()));
+     
 
         tunablePanel.revalidate();
         tunablePanel.repaint();
     }
 
-    private AbstractPathFindingAlgorithm getAlgorithm () {
-        return (AbstractPathFindingAlgorithm) algorithmSelecter.getSelectedItem();
+    private AbstractMFRalgorithm getAlgorithm () {
+        return (AbstractMFRalgorithm) algorithmSelecter.getSelectedItem();
     }
 
     @Override
@@ -111,6 +129,8 @@ public class PathFindingSubpanel
 
     @Override
     public void updateContextBuilder () {
-    	contextBundleBuilder.setPathFindingAlgorithm(getAlgorithm());    
+    		contextBundleBuilder.setcomputeMFRs(computeMFRs.isSelected());
+        contextBundleBuilder.setIncludecomposite(includeCompositeNodes.isSelected());
+        contextBundleBuilder.setMFRalgorithm(getAlgorithm()); 
     }
 }
