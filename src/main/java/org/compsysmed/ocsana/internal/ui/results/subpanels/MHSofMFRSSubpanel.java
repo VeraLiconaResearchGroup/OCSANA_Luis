@@ -34,11 +34,11 @@ import javax.swing.table.TableRowSorter;
 
 // OCSANA imports
 import org.compsysmed.ocsana.internal.ui.results.InterventionDetailsDialog;
-
+import org.compsysmed.ocsana.internal.ui.results.InterventionDetailsDialogOfMFRs;
 import org.compsysmed.ocsana.internal.util.context.ContextBundle;
 import org.compsysmed.ocsana.internal.util.results.ResultsBundle;
 import org.compsysmed.ocsana.internal.util.results.CombinationOfInterventions;
-
+import org.compsysmed.ocsana.internal.util.results.CombinationOfInterventionsOfMFRs;
 public class MHSofMFRSSubpanel
     extends JPanel {
     private final ContextBundle contextBundle;
@@ -70,11 +70,11 @@ public class MHSofMFRSSubpanel
     }
 
     private class MHSOFMFRSTable extends JTable {
-        private final List<CombinationOfInterventions> MHSOFMFRS;
+        private final List<CombinationOfInterventionsOfMFRs> MHSOFMFRS;
 
         public MHSOFMFRSTable () {
             this.MHSOFMFRS = new ArrayList<>(resultsBundle.getMHSOFMFRS());
-            Collections.sort(MHSOFMFRS, new SortbyOcsanaScore());
+//            Collections.sort(MHSOFMFRS, new SortbyOcsanaScore());
             MHSOFMFRSTableModel mhsofmfrsModel = new MHSOFMFRSTableModel(contextBundle, resultsBundle, MHSOFMFRS);
             setModel(mhsofmfrsModel);
 
@@ -106,28 +106,29 @@ public class MHSofMFRSSubpanel
 
         public void handleUserDoubleClick (Integer row) {
         		
-            CombinationOfInterventions mhsofmfr = MHSOFMFRS.get(row);
-            InterventionDetailsDialog detailsDialog = new InterventionDetailsDialog(cytoscapeFrame, contextBundle.getNetwork(), mhsofmfr, resultsBundle.getOptimalInterventionSignings(mhsofmfr));
+            CombinationOfInterventionsOfMFRs mhsofmfr = MHSOFMFRS.get(row);
+//            InterventionDetailsDialogOfMFRs detailsDialog = new InterventionDetailsDialogOfMFRs(cytoscapeFrame, contextBundle.getNetwork(), mhsofmfr);
+            
         }
     }
 
-    class SortbyOcsanaScore implements Comparator<CombinationOfInterventions>
-    {
-
-		@Override
-		public int compare(CombinationOfInterventions o1, CombinationOfInterventions o2) {
-			return Double.compare(o1.getOCSANAScore(), o2.getOCSANAScore());
-
-		}
-    }
+//    class SortbyOcsanaScore implements Comparator<CombinationOfInterventionsOfMFRs>
+//    {
+//
+//		@Override
+//		public int compare(CombinationOfInterventions o1, CombinationOfInterventions o2) {
+//			return Double.compare(o1.getOCSANAScore(), o2.getOCSANAScore());
+//
+//		}
+//    }
     private static class MHSOFMFRSTableModel extends AbstractTableModel {
         private final ContextBundle contextBundle;
         private final ResultsBundle resultsBundle;
-        private final List<CombinationOfInterventions> MHSOFMFRS;
+        private final List<CombinationOfInterventionsOfMFRs> MHSOFMFRS;
 
         public MHSOFMFRSTableModel (ContextBundle contextBundle,
                               ResultsBundle resultsBundle,
-                              List<CombinationOfInterventions> MHSOFMFRS) {
+                              List<CombinationOfInterventionsOfMFRs> MHSOFMFRS) {
             Objects.requireNonNull(contextBundle, "Context bundle cannot be null");
             this.contextBundle = contextBundle;
 
@@ -137,7 +138,7 @@ public class MHSofMFRSSubpanel
             Objects.requireNonNull(MHSOFMFRS, "CIs collection cannot be null");
             this.MHSOFMFRS = MHSOFMFRS;
         }
-        String[] colNames = {"MHS", "Size", "OCSANA score", "Best SI priority score"};
+        String[] colNames = {"MHS", "Size"};
 
         @Override
         public String getColumnName (int col) {
@@ -156,7 +157,7 @@ public class MHSofMFRSSubpanel
 
         @Override
         public Object getValueAt (int row, int col) {
-            CombinationOfInterventions mhs = MHSOFMFRS.get(row);
+            CombinationOfInterventionsOfMFRs mhs = MHSOFMFRS.get(row);
             switch (col) {
             case 0:
                 return mhs.interventionNodesString();
@@ -164,22 +165,15 @@ public class MHSofMFRSSubpanel
             case 1:
                 return mhs.size();
 
-            case 2:
-            		
-                return mhs.getOCSANAScore();
-
-            case 3:
-                return getSIPriorityScore(mhs);
-
             default:
                 throw new IllegalArgumentException(String.format("Table does not have %d columns", col));
             }
         }
 
-        private Double getSIPriorityScore (CombinationOfInterventions ci) {
-            Double maxPriorityScore = resultsBundle.getOptimalInterventionSignings(ci).stream().mapToDouble(contextBundle.getSIScoringAlgorithm()::computePriorityScore).max().orElse(0d);
-            return maxPriorityScore;
-        }
+//        private Double getSIPriorityScore (CombinationOfInterventions ci) {
+//            Double maxPriorityScore = resultsBundle.getOptimalInterventionSignings(ci).stream().mapToDouble(contextBundle.getSIScoringAlgorithm()::computePriorityScore).max().orElse(0d);
+//            return maxPriorityScore;
+//        }
 
         @Override
         public Class<?> getColumnClass(int column) {

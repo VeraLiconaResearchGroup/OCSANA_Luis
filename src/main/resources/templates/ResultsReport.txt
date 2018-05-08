@@ -120,11 +120,10 @@ No Minimal Functional Routes to off-target nodes found.
 Found {{resultsBundle.getMHSOFMFRS().size()}} CIs in {{resultsBundle.getMHSOFMFRSExecutionSeconds()}}s.
 
 
-Scoring data for all CIs using paths as signaling object:
-Cut set	Size	OCSANA score	Target score	Side-effect score
+Scoring data for all CIs using minimal functional routes as signaling object:
+Cut set	Size
 {% for ci in resultsBundle.getMHSOFMFRS() %}
-{{ci.interventionNodesString()}}	{{ci.size()}}	{{resultsBundle.getOCSANAScores().OCSANA(ci.getNodes())}}	{{resultsBundle.getOCSANAScores().EFFECT_ON_TARGETS(ci.getNodes())}}	{{resultsBundle.getOCSANAScores().SIDE_EFFECTS(ci.getNodes())}}
-
+{{ci.interventionNodesString()}}	{{ci.size()}}	
 {% endfor %}
 {% endif %}
 {% endif %}

@@ -18,7 +18,7 @@ import org.compsysmed.ocsana.internal.tasks.runner.RunnerTask;
 import org.compsysmed.ocsana.internal.util.context.ContextBundle;
 import org.compsysmed.ocsana.internal.util.results.ResultsBundle;
 import org.compsysmed.ocsana.internal.util.results.CombinationOfInterventions;
-
+import org.compsysmed.ocsana.internal.util.results.CombinationOfInterventionsOfMFRs;
 public class MHSOFMFRAlgorithmTask extends AbstractOCSANATask {
     private static final OCSANAStep algStep = OCSANAStep.FIND_MHSES_OF_MFRS;
 
@@ -116,7 +116,7 @@ public class MHSOFMFRAlgorithmTask extends AbstractOCSANATask {
         if (MHSOFMFRS != null) {
           
         	
-          resultsBundle.setMHSOFMFRS(MHSOFMFRS.stream().map(mhsofmfrs -> new CombinationOfInterventions(mhsofmfrs, targetNodes, contextBundle.getNodeHandler()::getNodeName, contextBundle.getNodeHandler()::getNodeID, resultsBundle.getOCSANAScores().OCSANA(mhsofmfrs))).collect(Collectors.toList()));
+          resultsBundle.setMHSOFMFRS(MHSOFMFRS.stream().map(mhsofmfrs -> new CombinationOfInterventionsOfMFRs(mhsofmfrs, targetNodes, contextBundle.getNodeHandler()::getNodeName, contextBundle.getNodeHandler()::getNodeID)).collect(Collectors.toList()));
          
         }
         

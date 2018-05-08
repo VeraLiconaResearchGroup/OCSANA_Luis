@@ -21,7 +21,7 @@ import org.cytoscape.model.CyEdge;
 
 // OCSANA imports
 import org.compsysmed.ocsana.internal.util.results.CombinationOfInterventions;
-
+import org.compsysmed.ocsana.internal.util.results.CombinationOfInterventionsOfMFRs;
 public class ResultsBundle {
     // Paths data
     private Collection<List<CyEdge>> pathsToTargets;
@@ -53,7 +53,7 @@ public class ResultsBundle {
     
     
     
-    private Collection<CombinationOfInterventions> MHSOFMFRS;
+    private Collection<CombinationOfInterventionsOfMFRs> MHSOFMFRS;
     
     
     
@@ -202,13 +202,13 @@ public class ResultsBundle {
         this.CIs = CIs;
     }
     
-    public Collection<CombinationOfInterventions> getMHSOFMFRS () {
+    public Collection<CombinationOfInterventionsOfMFRs> getMHSOFMFRS () {
         return MHSOFMFRS;
     }
    
     
      
-    public void setMHSOFMFRS (Collection<CombinationOfInterventions> MHSOFMFRS) {
+    public void setMHSOFMFRS (Collection<CombinationOfInterventionsOfMFRs> MHSOFMFRS) {
         Objects.requireNonNull(CIs, "Collection of CIs cannot be null");
         this.MHSOFMFRS = MHSOFMFRS;
     }
