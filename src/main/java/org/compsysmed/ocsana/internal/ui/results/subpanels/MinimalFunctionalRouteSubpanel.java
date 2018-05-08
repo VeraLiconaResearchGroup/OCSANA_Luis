@@ -35,7 +35,7 @@ public MinimalFunctionalRouteSubpanel (ContextBundle contextBundle,
         break;
 
     case TO_OFF_TARGETS:
-        MFRs = resultsBundle.getPathsToOffTargets();
+        MFRs = resultsBundle.getMFRToOffTargets();
         MFRfindingtime= resultsBundle.getMFRsToOffTargetsExecutionSeconds();
         break;
 

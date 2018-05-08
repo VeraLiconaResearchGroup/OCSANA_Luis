@@ -117,10 +117,12 @@ public class MFR extends AbstractMFRalgorithm {
     				
     				for (CyNode v : nodeList ) {
     					List<Integer> incoming = new ArrayList<Integer>();
-    					
+    					//If it is not a source node, add all incoming nodes. Otherwise, don't add anything.
+    					if(!sources.contains(v)) {
     					for (CyNode u :network.getNeighborList(v, CyEdge.Type.INCOMING)) {
     						incoming.add(nodeList.indexOf(u));
     				}
+    					}
     				invadj_list.add(new AbstractMap.SimpleEntry(nodeList.indexOf(v),incoming));
     			}
     		

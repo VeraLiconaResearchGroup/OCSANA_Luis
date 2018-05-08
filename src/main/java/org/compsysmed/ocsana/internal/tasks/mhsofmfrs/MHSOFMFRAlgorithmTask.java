@@ -117,7 +117,7 @@ public class MHSOFMFRAlgorithmTask extends AbstractOCSANATask {
           
         	
           resultsBundle.setMHSOFMFRS(MHSOFMFRS.stream().map(mhsofmfrs -> new CombinationOfInterventions(mhsofmfrs, targetNodes, contextBundle.getNodeHandler()::getNodeName, contextBundle.getNodeHandler()::getNodeID, resultsBundle.getOCSANAScores().OCSANA(mhsofmfrs))).collect(Collectors.toList()));
-          //THE LINE ABOVE IS GIVING AN EXCEPTION. I have already checked that MHSes is not null.
+         
         }
         
         Long postMHSOFMFRSTime = System.nanoTime();
