@@ -74,19 +74,11 @@ public class MHSofMFRSSubpanel
 
         public MHSOFMFRSTable () {
             this.MHSOFMFRS = new ArrayList<>(resultsBundle.getMHSOFMFRS());
-//            Collections.sort(MHSOFMFRS, new SortbyOcsanaScore());
+            Collections.sort(MHSOFMFRS, new SortbySize());
             MHSOFMFRSTableModel mhsofmfrsModel = new MHSOFMFRSTableModel(contextBundle, resultsBundle, MHSOFMFRS);
             setModel(mhsofmfrsModel);
 
-////            // Set up the sorter
-////            TableRowSorter<TableModel> mhsSorter = new TableRowSorter<>(mhsModel);
-////            mhsSorter.setSortable(0, false); 
-////            
-////            mhsSorter.setSortable(1, false); // Disable sorting by CI size TEMPORARY
-////            mhsSorter.setSortable(2, false); // Disable sorting by CI size TEMPORARY
-////            mhsSorter.setSortable(3, false); // Disable sorting by best SI priority score TEMPORARY
-////            
-//            setRowSorter(mhsSorter);
+
 
             // Handle double click events per row
             MouseListener mouseListener = new MouseAdapter() {
@@ -112,15 +104,15 @@ public class MHSofMFRSSubpanel
         }
     }
 
-//    class SortbyOcsanaScore implements Comparator<CombinationOfInterventionsOfMFRs>
-//    {
-//
-//		@Override
-//		public int compare(CombinationOfInterventions o1, CombinationOfInterventions o2) {
-//			return Double.compare(o1.getOCSANAScore(), o2.getOCSANAScore());
-//
-//		}
-//    }
+    class SortbySize implements Comparator<CombinationOfInterventionsOfMFRs>
+    {
+
+		@Override
+		public int compare(CombinationOfInterventionsOfMFRs o1, CombinationOfInterventionsOfMFRs o2) {
+			return Integer.compare(o1.size(), o2.size());
+
+		}
+    }
     private static class MHSOFMFRSTableModel extends AbstractTableModel {
         private final ContextBundle contextBundle;
         private final ResultsBundle resultsBundle;

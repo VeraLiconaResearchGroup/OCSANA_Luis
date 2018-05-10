@@ -350,7 +350,7 @@ public final class ContextBundle {
 //        } catch (NoSuchElementException e) {
 //            return result.toString();
 //        }
-		result.append("MFR: ");
+		result.append("MFR of size " +MFR.size() +" : ");
         for (CyEdge edge: MFR) {
         		result.append(getNodeName(edge.getTarget()));
         		
