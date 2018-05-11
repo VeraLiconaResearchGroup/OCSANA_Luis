@@ -47,7 +47,7 @@ public class MFR extends AbstractMFRalgorithm {
 	
 	int curr_mfr_index;//pointer
 	int mfr_count;
-	boolean is_mfr_complete; // aka flag
+
 	// 
 	
 	public MFR(CyNetwork network) {
