@@ -13,7 +13,7 @@ package org.compsysmed.ocsana.internal.ui.results;
 
 // Java imports
 import java.util.*;
-
+import java.awt.BorderLayout;
 import java.awt.Component;
 
 import java.awt.event.ActionEvent;
@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
 // Cytoscape imports
@@ -94,7 +95,7 @@ public class InterventionDetailsDialog
         contentPanel = new JPanel();
         add(contentPanel);
         add(getButtonPanel());
-
+        contentPanel.setLayout(new BorderLayout());
         signedInterventionPanel = new SignedInterventionReportSubpanel(this);
         contentPanel.add(signedInterventionPanel);
 
@@ -112,12 +113,13 @@ public class InterventionDetailsDialog
     public void processNodeClick (SignedInterventionNode signedNode) {
         if (drugabilityPanel == null) {
             drugabilityPanel = new DrugabilityReportSubpanel();
-            contentPanel.add(drugabilityPanel);
+            
         }
 
         DrugabilityDataBundle bundle = drugabilityDataBundleFactory.getBundle(signedNode);
         drugabilityPanel.showReport(signedNode, bundle);
-
+        
+        add(drugabilityPanel);
         pack();
         setLocationRelativeTo(getOwner());
     }

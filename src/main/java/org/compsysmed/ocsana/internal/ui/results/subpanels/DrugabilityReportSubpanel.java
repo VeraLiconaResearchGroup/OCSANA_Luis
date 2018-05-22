@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.JScrollPane;
-
+import javax.swing.JTextArea;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -56,10 +56,11 @@ public class DrugabilityReportSubpanel
     public DrugabilityReportSubpanel () {
         // Set up dialog
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+    		
         textPane = new JTextPane();
         textPane.setContentType("text/html");
         textPane.setEditable(false);
+
         textPane.addHyperlinkListener(new HyperlinkListener() {
                 public void hyperlinkUpdate(HyperlinkEvent e) {
                     if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -80,7 +81,7 @@ public class DrugabilityReportSubpanel
                     }
                 }
             });
-        add(textPane);
+        //add(textArea);
 
         // Compile template
         PebbleEngine engine = new PebbleEngine.Builder().strictVariables(true).build();
@@ -89,6 +90,8 @@ public class DrugabilityReportSubpanel
         } catch (PebbleException e) {
             throw new IllegalStateException("Could not load drugability report template. Please report the following error to the plugin author: " + e.getMessage());
         }
+        scrollPane = new JScrollPane(textPane);
+        add(scrollPane);
     }
 
     /**
@@ -112,9 +115,7 @@ public class DrugabilityReportSubpanel
         } catch (PebbleException|IOException e) {
             throw new IllegalStateException("Could not write drugability report. Please report the following error to the plugin author: " + e.getMessage());
         }
-
         textPane.setText(writer.toString());
-
     }
 
 }

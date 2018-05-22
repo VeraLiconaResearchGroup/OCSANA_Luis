@@ -1,5 +1,6 @@
 {# INPUTS: "node" is a SignedInterventionNode, "bundle" is a DrugabilityDataBundle #}
 <html>
+<div overflow-y : auto>
     <h3>Drugability report (Node {{node.getName()}}: {{node.getBiomoleculeID}})</h3>
     <h4>Desired effect: {{node.getSign()}}</h4>
     {%if bundle is null %}
@@ -90,4 +91,5 @@
         No DR.PRODIS predictions were found.
         {% endif %}
     {% endif %}
+    </div>
 </html>

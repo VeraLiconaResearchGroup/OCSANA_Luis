@@ -12,6 +12,7 @@
 package org.compsysmed.ocsana.internal.ui;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -64,10 +65,12 @@ public class OCSANADialog
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(closeButton);
-
+        
         LookAndFeelUtil.setDefaultOkCancelKeyStrokes(getRootPane(), closeButton.getAction(), closeButton.getAction());
         getRootPane().setDefaultButton(closeButton);
 
+        
+        
         return buttonPanel;
     }
 }

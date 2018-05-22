@@ -37,7 +37,7 @@ public class MFR extends AbstractMFRalgorithm {
 
 
    @Tunable(description = "Maximum MFR size",
-            tooltip = "Maximum number of edges to allow in an MFR",
+            tooltip = "Maximum number of nodes to allow in an MFR",
             gravity = 261,
             dependsOn = "restrictMFRsize=true")
    public Integer maxMFRsize = 20;
@@ -132,7 +132,7 @@ public class MFR extends AbstractMFRalgorithm {
             
             
             
-            
+    			int last_index=0;
             int target_index =nodeList.indexOf(target);
 			int source_index=nodeList.indexOf(source);
 			int m;
@@ -165,19 +165,23 @@ public class MFR extends AbstractMFRalgorithm {
             tags.add(0);
             while(pointer<mfr_count)
             {
+            	if(mfrs.get(pointer).size()>=maxMFRsize) {
+            		mfrs.remove(pointer);
+            		break;
+            	}
             	flag =false;
             		
             		ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>cmfr=new ArrayList<>();
             	for (SimpleEntry<Integer, ArrayList<Integer>> entry:mfrs.get(pointer)) {
             		int x=entry.getKey();
             		cmfr.add(new SimpleEntry<Integer, ArrayList<Integer>>(x, new ArrayList<Integer>()) );
-            		int last_index =cmfr.size()-1;
+            	last_index =cmfr.size()-1;
             			for (int i:entry.getValue()) {
                     cmfr.get(last_index).getValue().add(i);
             		
             	}
             	}
-                    
+
             	
             	int ctag=tags.get(pointer);
             	
@@ -209,7 +213,7 @@ public class MFR extends AbstractMFRalgorithm {
             				m=cpred.size();
             				cmfr.get(ctag).getValue().clear();
             				cmfr.get(ctag).getValue().add(cpred.get(0));
-
+            				
             				mfrs.remove(pointer);
           				
             				tags.remove(pointer);
@@ -217,18 +221,19 @@ public class MFR extends AbstractMFRalgorithm {
             				
             				
             				for (int i = 0; i < m; i++) {
-            					
+            				
             				//Making copy of cmfr
             			     ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>temp1=new ArrayList<SimpleEntry<Integer,ArrayList<Integer>>>();
             	            	for (SimpleEntry<Integer, ArrayList<Integer>> entry:cmfr) {
             	            		int x=entry.getKey();
             	            		temp1.add(new SimpleEntry<Integer, ArrayList<Integer>>(x, new ArrayList<Integer>()) );
-            	            		int last_index =temp1.size()-1;
+            	            		last_index =temp1.size()-1;
             	            			for (int u:entry.getValue()) {
             	                    temp1.get(last_index).getValue().add(u);
             	            		
             	            	}
             	            	}
+
             	            	
             					
             					
